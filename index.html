@@ -366,8 +366,8 @@ function renderGrid(){
 
 function renderList(){
   const my = mine(), now = nowMin();
-  const remind = `<div class="remind card"><h3>${icon('bell')}開演提醒</h3><p><b>iPhone：</b>點每一場右邊的黃色日曆鈕，跳出畫面後按「加入行事曆」，開演前 10 分鐘就會提醒。<br><b>Android／電腦：</b>按下面黃色按鈕，一次加入全部。<br>「App 內提醒」要網頁開著才會響，當備用就好。</p>
-    <div class="row"><button class="main" id="icsBtn">加到行事曆（兩天全部）</button><button id="notiBtn">${alertsOn && notiPerm()==='granted' ? 'App 內提醒：已開啟' : '開啟 App 內提醒'}</button></div><div id="icsBox" class="icsbox"></div></div>`;
+  const remind = `<div class="remind card"><h3>${icon('bell')}開演提醒</h3><p>按黃色按鈕，兩天選的場次一次加進手機行事曆，跳出畫面後按「全部加入」，每場開演前 10 分鐘提醒。<br>只想加單一場，可以點那一場右邊的日曆鈕。</p>
+    <div class="row"><button class="main" id="icsBtn">一鍵加到行事曆</button><button id="notiBtn">${alertsOn && notiPerm()==='granted' ? 'App 內提醒：已開啟' : '開啟 App 內提醒'}</button></div></div>`;
   if (!my.length) return `<div class="empty card">${DAYS[day].label} 還沒有選任何節目。<br>切到「全部節目表」點你想看的團就會出現在這裡。</div>` + remind;
   let h = '<div class="list">';
   my.forEach((a,i)=>{
@@ -450,13 +450,15 @@ function buildICS(){
   return L.join('\r\n');
 }
 function exportICS(){
-  const ics = buildICS();
-  if (!ics){ toast('先選幾個節目再加到行事曆'); return; }
-  const url = URL.createObjectURL(new Blob([ics],{type:'text/calendar;charset=utf-8'}));
+  const ids = ['d1','d2'].flatMap(k=>DAYS[k].acts.filter(a=>picks.has(a.id)).map(a=>a.id.replace(/:/g,'')));
+  if (!ids.length){ toast('先選幾個節目再加到行事曆'); return; }
   const iOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
-  const box = document.getElementById('icsBox');
-  if (box && !iOS) box.innerHTML = `如果沒有跳出行事曆，<a href="${url}" download="fireball2026-lineup.ics" target="_blank" rel="noopener">點這裡打開行事曆檔</a>${iOS ? '，再按「全部加入」' : '，下載後點開檔案'}。`;
-  if (iOS){ toast('iPhone 請點每一場右邊的黃色日曆鈕'); document.querySelector('.item .cal')?.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+  if ('serviceWorker' in navigator && navigator.serviceWorker.controller){
+    location.href = 'my-lineup.ics?e=' + ids.join(',');
+    return;
+  }
+  if (iOS){ toast('請重新整理一次頁面，再按一次'); return; }
+  const url = URL.createObjectURL(new Blob([buildICS()],{type:'text/calendar;charset=utf-8'}));
   const a = document.createElement('a'); a.href=url; a.download='fireball2026-lineup.ics'; document.body.appendChild(a); a.click(); a.remove();
   toast('已下載，打開檔案就會加進行事曆');
 }
