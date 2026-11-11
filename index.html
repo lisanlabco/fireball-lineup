@@ -122,6 +122,7 @@ header{position:relative;z-index:1;text-align:center;padding:6px 0 12px}
 .remind p{margin:0 0 10px;font-size:12px;color:var(--muted);line-height:1.6}
 .remind .row{display:flex;gap:10px}
 .remind button.main{background:var(--hi)}
+.remind a{color:var(--ball);font-weight:900}
 .icsbox{font-size:12px;font-weight:700;margin-top:10px;line-height:1.6}
 .icsbox:empty{display:none}
 .icsbox a{color:var(--ball)}
@@ -267,7 +268,12 @@ const store = (k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); } cat
 let picks = new Set(load(KEY, []));
 let notified = new Set(load(NKEY, []));
 let alertsOn = load(AKEY, true);
-const save = () => store(KEY, [...picks]);
+const GAS = 'https://script.google.com/macros/s/AKfycbze3cX_TOB64N49ZPMYjqyikP9Z5uX9ass7c4SYIlSrjVXNNBJjbKbMa6Vq4C14YZe9/exec';
+let uid = load('fireball2026-uid', '');
+if (!/^[a-z0-9]{8,32}$/.test(uid)) { uid = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => (b % 36).toString(36)).join(''); store('fireball2026-uid', uid); }
+let calSub = load('fireball2026-calsub', false);
+let lastSync = load('fireball2026-lastsync', '');
+const save = () => { store(KEY, [...picks]); if (calSub) queueSync(); };
 
 function tpNow(){
   const p = Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date()).map(x=>[x.type,x.value]));
@@ -366,8 +372,8 @@ function renderGrid(){
 
 function renderList(){
   const my = mine(), now = nowMin();
-  const remind = `<div class="remind card"><h3>${icon('bell')}開演提醒</h3><p>按黃色按鈕，兩天選的場次一次加進手機行事曆，跳出畫面後按「全部加入」，每場開演前 10 分鐘提醒。<br>只想加單一場，可以點那一場右邊的日曆鈕。</p>
-    <div class="row"><button class="main" id="icsBtn">一鍵加到行事曆</button><button id="notiBtn">${alertsOn && notiPerm()==='granted' ? 'App 內提醒：已開啟' : '開啟 App 內提醒'}</button></div></div>`;
+  const remind = `<div class="remind card"><h3>${icon('bell')}開演提醒</h3>${calSub ? `<p>已訂閱行事曆。之後在這裡加入或取消場次會自動同步，行事曆通常幾分鐘內更新；急的話到行事曆 App 的「行事曆」列表往下拉就會刷新。${lastSync ? `<br>最後同步 ${lastSync}` : ''}<br><a href="#" id="resub">剛剛沒訂閱成功？點這裡重新訂閱</a></p>` : `<p>按黃色按鈕訂閱行事曆，跳出畫面後按「訂閱」。之後重選場次會自動更新，取消的場次也會從行事曆消失。<br>iPhone 要響提醒：到「設定」的行事曆帳號，找到已訂閱的「Fireball 2026」，把「移除提醒」關掉。</p>`}
+    <div class="row"><button class="main" id="icsBtn">${calSub ? '立即同步' : '一鍵訂閱行事曆'}</button><button id="notiBtn">${alertsOn && notiPerm()==='granted' ? 'App 內提醒：已開啟' : '開啟 App 內提醒'}</button></div></div>`;
   if (!my.length) return `<div class="empty card">${DAYS[day].label} 還沒有選任何節目。<br>切到「全部節目表」點你想看的團就會出現在這裡。</div>` + remind;
   let h = '<div class="list">';
   my.forEach((a,i)=>{
@@ -380,7 +386,7 @@ function renderList(){
     h += `<div class="item card ${a.e<=now?'past':''}"><div class="bar" style="background:${STAGES[a.st].hex}"></div>
       <div class="tm">${hm(a.s)}–${hm(a.e)}</div>
       <div class="nm">${esc(a.n)}<small>${STAGES[a.st].name}${a.np?'・禁止拍照錄影':''}</small></div>
-      <a class="cal" href="cal-${a.id.replace(/:/g,'')}.ics" aria-label="加到行事曆">${icon('cal')}</a><button data-rm="${a.id}" aria-label="移除">${icon('x')}</button></div>`;
+      <button data-rm="${a.id}" aria-label="移除">${icon('x')}</button></div>`;
   });
   h += `</div><div class="tools"><button id="copyBtn">複製我的 lineup</button><button class="danger" id="clrBtn">清除這天</button></div>` + remind;
   return h;
@@ -449,18 +455,34 @@ function buildICS(){
   L.push('END:VCALENDAR');
   return L.join('\r\n');
 }
-function exportICS(){
-  const ids = ['d1','d2'].flatMap(k=>DAYS[k].acts.filter(a=>picks.has(a.id)).map(a=>a.id.replace(/:/g,'')));
-  if (!ids.length){ toast('先選幾個節目再加到行事曆'); return; }
-  const iOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
-  if ('serviceWorker' in navigator && navigator.serviceWorker.controller){
-    location.href = 'my-lineup.ics?e=' + ids.join(',');
-    return;
+const allIds = () => ['d1','d2'].flatMap(k=>DAYS[k].acts.filter(a=>picks.has(a.id)).map(a=>a.id.replace(/:/g,'')));
+async function syncCloud(){
+  const r = await fetch(`${GAS}?save=1&u=${uid}&e=${allIds().join(',')}`);
+  const j = await r.json();
+  if (!j.ok) throw new Error('sync');
+  const t = tpNow(); lastSync = hm(t.min); store('fireball2026-lastsync', lastSync);
+  return j.n;
+}
+let syncTimer;
+function queueSync(){
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(async () => { try { await syncCloud(); if (view==='mine') renderMain(); } catch(e) {} }, 1200);
+}
+async function exportICS(){
+  const btn = document.getElementById('icsBtn');
+  if (btn){ btn.disabled = true; btn.textContent = '同步中…'; }
+  try { await syncCloud(); }
+  catch(e){ toast('連不上雲端，等一下再試'); renderMain(); return; }
+  if (!calSub){
+    calSub = true; store('fireball2026-calsub', true);
+    const feed = GAS.replace(/^https:\/\//,'') + '?u=' + uid;
+    const apple = /iP(hone|ad|od)|Macintosh/.test(navigator.userAgent);
+    if (apple) location.href = 'webcal://' + feed;
+    else window.open('https://calendar.google.com/calendar/r?cid=' + encodeURIComponent('webcal://' + feed), '_blank');
+  } else {
+    toast('已同步，行事曆幾分鐘內會更新');
   }
-  if (iOS){ toast('請重新整理一次頁面，再按一次'); return; }
-  const url = URL.createObjectURL(new Blob([buildICS()],{type:'text/calendar;charset=utf-8'}));
-  const a = document.createElement('a'); a.href=url; a.download='fireball2026-lineup.ics'; document.body.appendChild(a); a.click(); a.remove();
-  toast('已下載，打開檔案就會加進行事曆');
+  renderMain();
 }
 
 document.getElementById('daySeg').onclick = e => { const b=e.target.closest('button'); if(b){ day=b.dataset.day; render(); } };
@@ -474,6 +496,7 @@ document.getElementById('main').onclick = async e => {
   const rm = e.target.closest('[data-rm]');
   if (rm){ picks.delete(rm.dataset.rm); save(); render(); return; }
   if (e.target.id==='icsBtn'){ exportICS(); return; }
+  if (e.target.id==='resub'){ e.preventDefault(); calSub=false; store('fireball2026-calsub', false); exportICS(); return; }
   if (e.target.id==='notiBtn'){ toggleAlerts(); return; }
   if (e.target.id==='copyBtn'){
     let txt = 'FIREBALL 2026 我的 lineup\n';
