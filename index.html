@@ -26,7 +26,7 @@ body{
   background-color:var(--sky);
   background-image:radial-gradient(rgba(255,255,255,.38) 1.3px,transparent 1.5px);
   background-size:9px 9px;
-  padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-area-inset-bottom) + 24px) env(safe-area-inset-left);
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-area-inset-bottom) + 96px) env(safe-area-inset-left);
   overflow-x:hidden;
 }
 .disp{font-family:"Dela Gothic One","Noto Sans TC",sans-serif;font-weight:400}
@@ -35,14 +35,14 @@ body{
 /* bunting + clouds */
 .bunting{height:30px;margin:0 -12px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='30'%3E%3Cpath d='M0 4 Q60 14 120 4' stroke='%232a1d14' stroke-width='1.5' fill='none'/%3E%3Cpath d='M4 5 L22 7 L13 26Z' fill='%23e8262a' stroke='%232a1d14' stroke-width='1.2'/%3E%3Cpath d='M34 8 L52 9 L43 28Z' fill='%23ffd23f' stroke='%232a1d14' stroke-width='1.2'/%3E%3Cpath d='M66 9 L84 8 L75 28Z' fill='%231f4ea3' stroke='%232a1d14' stroke-width='1.2'/%3E%3Cpath d='M96 7 L114 5 L105 26Z' fill='%231e9a48' stroke='%232a1d14' stroke-width='1.2'/%3E%3C/svg%3E") repeat-x}
 .cloud{position:absolute;pointer-events:none;z-index:0}
-.cloud.c1{top:44px;left:-18px;width:110px}
-.cloud.c2{top:96px;right:-22px;width:120px}
+.cloud.c1{top:40px;left:-24px;width:90px}
+.cloud.c2{top:80px;right:-26px;width:96px}
 
 header{position:relative;z-index:1;text-align:center;padding:6px 0 12px}
 .logo{display:inline-block;line-height:1;transform:rotate(-2deg)}
-.logo .yr{display:block;font-size:22px;color:var(--hi);-webkit-text-stroke:1.5px var(--ink);text-shadow:2px 2px 0 var(--ink);letter-spacing:1px}
-.logo .fb{display:block;font-size:46px;color:var(--orange);-webkit-text-stroke:2px var(--ink);text-shadow:3px 4px 0 var(--ink);letter-spacing:1px;margin-top:2px}
-.logo .rw{display:block;font-size:15px;color:var(--hi);-webkit-text-stroke:1px var(--ink);text-shadow:2px 2px 0 var(--ink);margin-top:8px;letter-spacing:.5px}
+.logo .yr{display:block;font-size:16px;color:var(--hi);-webkit-text-stroke:1.5px var(--ink);text-shadow:2px 2px 0 var(--ink);letter-spacing:1px}
+.logo .fb{display:block;font-size:38px;color:var(--orange);-webkit-text-stroke:2px var(--ink);text-shadow:3px 4px 0 var(--ink);letter-spacing:1px;margin-top:2px}
+.logo .rw{display:block;font-size:12px;color:var(--hi);-webkit-text-stroke:1px var(--ink);text-shadow:2px 2px 0 var(--ink);margin-top:6px;letter-spacing:.5px}
 .sub{font-size:12px;font-weight:900;margin-top:8px;letter-spacing:2px}
 .seg{display:inline-flex;gap:8px;margin-top:10px}
 .seg button{font-family:"Dela Gothic One",sans-serif;border:3px solid var(--ink);background:rgba(255,255,255,.55);font-size:15px;padding:5px 16px;border-radius:999px;color:var(--ink);cursor:pointer;box-shadow:0 3px 0 var(--ink)}
@@ -64,9 +64,14 @@ header{position:relative;z-index:1;text-align:center;padding:6px 0 12px}
 .sim{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;font-weight:700}
 .sim input{flex:1;accent-color:var(--orange)}
 .simnote{font-size:11px;color:var(--muted);margin-top:4px}
+.acts{display:flex;gap:8px;margin-top:12px}
+.acts button{flex:1;border:2.5px solid var(--ink);background:#fff;border-radius:12px;padding:8px 4px;font:inherit;font-weight:900;font-size:13px;cursor:pointer;box-shadow:0 3px 0 var(--ink)}
+.acts button.y{background:var(--hi)}
+.help{position:relative;z-index:1;display:flex;gap:10px;align-items:center;background:var(--hi);border:3px solid var(--ink);border-radius:14px;box-shadow:3px 4px 0 var(--ink);padding:10px 12px;margin-bottom:12px;font-size:13px;font-weight:900;line-height:1.5}
+.help span{font-size:22px}
 
-.views{position:relative;z-index:1;display:flex;gap:10px;margin:0 0 14px}
-.views button{flex:1;border:3px solid var(--ink);background:#fff;border-radius:14px;padding:9px;font:inherit;font-weight:900;font-size:15px;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
+.views{position:fixed;z-index:40;left:0;right:0;bottom:0;display:flex;gap:10px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:3px solid var(--ink);max-width:720px;margin:0 auto}
+.views button{flex:1;border:3px solid var(--ink);background:#fff;border-radius:14px;padding:10px 6px;font:inherit;font-weight:900;font-size:15px;cursor:pointer;box-shadow:0 3px 0 var(--ink)}
 .views button.on{background:var(--orange);color:#fff}
 .views .count{display:inline-block;min-width:22px;padding:0 6px;margin-left:5px;border-radius:999px;background:var(--hi);color:var(--ink);font-size:12px;border:2px solid var(--ink)}
 
@@ -111,8 +116,11 @@ header{position:relative;z-index:1;text-align:center;padding:6px 0 12px}
 .remind p{margin:0 0 10px;font-size:12px;color:var(--muted);line-height:1.6}
 .remind .row{display:flex;gap:10px}
 .remind button.main{background:var(--hi)}
+.icsbox{font-size:12px;font-weight:700;margin-top:10px;line-height:1.6}
+.icsbox:empty{display:none}
+.icsbox a{color:var(--ball)}
 
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(90px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;font-weight:700;transition:transform .25s;z-index:50;white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(160px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;font-weight:700;transition:transform .25s;z-index:50;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .alert{position:fixed;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));z-index:60;background:var(--hi);border:3px solid var(--ink);border-radius:16px;box-shadow:4px 5px 0 var(--ink);padding:12px 14px;font-weight:900;transform:translateY(-160%);transition:transform .3s;max-width:696px;margin:0 auto}
 .alert.show{transform:translateY(0)}
@@ -144,8 +152,8 @@ footer{position:relative;font-size:11px;font-weight:700;text-align:center;margin
   <section class="next card" id="next"></section>
 
   <div class="views" id="viewSeg">
-    <button data-view="grid">全部節目表</button>
-    <button data-view="mine">我的行程<span class="count" id="cnt">0</span></button>
+    <button data-view="grid">📅 全部節目表</button>
+    <button data-view="mine">★ 我的行程<span class="count" id="cnt">0</span></button>
   </div>
 
   <div id="main"></div>
@@ -306,6 +314,7 @@ function renderNext(){
   if (!live){
     h += `<div class="sim"><span style="white-space:nowrap">預覽 ${hm(sim)}</span><input type="range" min="${START}" max="${END}" step="5" value="${sim}" id="simR"></div><div class="simnote">還沒到活動日，可以拖拉看看；11/14、11/15 當天會自動用現在時間。</div>`;
   }
+  if (my.length) h += `<div class="acts"><button data-go="mine">★ 看我的行程</button><button class="y" data-go="remind">⏰ 設定開演提醒</button></div>`;
   document.getElementById('next').innerHTML = h;
   const r = document.getElementById('simR');
   if (r) r.oninput = e => { sim = +e.target.value; renderNext(); if (view==='grid') placeNow(); else renderMain(); };
@@ -324,7 +333,8 @@ function renderGrid(){
   const acts = DAYS[day].acts, bad = clashes(mine());
   const laneW = `((100% - var(--axis) - 3 * var(--gap)) / 4)`;
   const left = i => `calc(var(--axis) + ${i} * (${laneW} + var(--gap)))`;
-  let h = `<div class="gridbox"><div class="heads">${COLS.map(c=>`<div style="background:${STAGES[c].hex}">${STAGES[c].name}</div>`).join('')}</div>`;
+  let h = mine().length ? '' : `<div class="help"><span>👆</span>直接點下面的格子，就會加進「我的行程」並變成黃色 ★。上面會告訴你下一站去哪個舞台。</div>`;
+  h += `<div class="gridbox"><div class="heads">${COLS.map(c=>`<div style="background:${STAGES[c].hex}">${STAGES[c].name}</div>`).join('')}</div>`;
   h += `<div class="grid" style="height:calc(${END-START+14} * var(--px))">`;
   COLS.forEach((c,i)=>{ h += `<div class="lane" style="left:${left(i)};width:calc(${laneW});background:${STAGES[c].lane}"></div>`; });
   for (let t=START; t<=END; t+=60) h += `<div class="hour" style="top:calc(${t-START+7} * var(--px))"><span>${hm(t)}</span></div>`;
@@ -343,7 +353,7 @@ function renderGrid(){
 function renderList(){
   const my = mine(), now = nowMin();
   const remind = `<div class="remind card"><h3>⏰ 開演提醒</h3><p>加到手機行事曆最穩，App 關掉也會在開演前 10 分鐘跳通知。「App 內提醒」要網頁開著（或剛切到背景）才會響。</p>
-    <div class="row"><button class="main" id="icsBtn">加到行事曆（兩天全部）</button><button id="notiBtn">${alertsOn && notiPerm()==='granted' ? 'App 內提醒：已開啟' : '開啟 App 內提醒'}</button></div></div>`;
+    <div class="row"><button class="main" id="icsBtn">加到行事曆（兩天全部）</button><button id="notiBtn">${alertsOn && notiPerm()==='granted' ? 'App 內提醒：已開啟' : '開啟 App 內提醒'}</button></div><div id="icsBox" class="icsbox"></div></div>`;
   if (!my.length) return `<div class="empty card">${DAYS[day].label} 還沒有選任何節目。<br>切到「全部節目表」點你想看的團就會出現在這裡。</div>` + remind;
   let h = '<div class="list">';
   my.forEach((a,i)=>{
@@ -428,21 +438,23 @@ function buildICS(){
 function exportICS(){
   const ics = buildICS();
   if (!ics){ toast('先選幾個節目再加到行事曆'); return; }
+  const url = URL.createObjectURL(new Blob([ics],{type:'text/calendar;charset=utf-8'}));
   const iOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
-  if (iOS){ location.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics); return; }
-  const url = URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));
+  const box = document.getElementById('icsBox');
+  if (box) box.innerHTML = `如果沒有跳出行事曆，<a href="${url}" download="fireball2026-lineup.ics" target="_blank" rel="noopener">點這裡打開行事曆檔</a>${iOS ? '，再按「全部加入」' : '，下載後點開檔案'}。`;
+  if (iOS){ location.href = url; return; }
   const a = document.createElement('a'); a.href=url; a.download='fireball2026-lineup.ics'; document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url), 5000);
   toast('已下載，打開檔案就會加進行事曆');
 }
 
 document.getElementById('daySeg').onclick = e => { const b=e.target.closest('button'); if(b){ day=b.dataset.day; render(); } };
 document.getElementById('viewSeg').onclick = e => { const b=e.target.closest('button'); if(b){ view=b.dataset.view; render(); window.scrollTo({top:0}); } };
+document.getElementById('next').addEventListener('click', e => { const b=e.target.closest('[data-go]'); if(!b) return; view='mine'; render(); if (b.dataset.go==='remind') setTimeout(()=>document.querySelector('.remind')?.scrollIntoView({behavior:'smooth',block:'center'}),50); else window.scrollTo({top:0,behavior:'smooth'}); });
 document.getElementById('alert').onclick = e => e.currentTarget.classList.remove('show');
 let clrArmed = false;
 document.getElementById('main').onclick = async e => {
   const act = e.target.closest('.act');
-  if (act){ const id=act.dataset.id; picks.has(id)?picks.delete(id):picks.add(id); save(); render(); return; }
+  if (act){ const id=act.dataset.id, a=DAYS[day].acts.find(x=>x.id===id); if(picks.has(id)){ picks.delete(id); toast('已移除：'+a.n); } else { picks.add(id); toast('★ 已加入：'+a.n); } save(); render(); return; }
   const rm = e.target.closest('[data-rm]');
   if (rm){ picks.delete(rm.dataset.rm); save(); render(); return; }
   if (e.target.id==='icsBtn'){ exportICS(); return; }
