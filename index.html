@@ -78,7 +78,7 @@ header{position:relative;z-index:1;text-align:center;padding:6px 0 12px}
 .lane{position:absolute;top:0;bottom:0;border-left:3px solid var(--ink);border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);border-radius:0 0 10px 10px}
 .hour{position:absolute;left:var(--axis);right:0;border-top:1.5px solid rgba(255,255,255,.75);z-index:1}
 .hour span{position:absolute;left:calc(-1 * var(--axis) + 1px);top:-11px;font-family:"Dela Gothic One",sans-serif;font-size:10px;color:var(--ink);background:#fff;border:2px solid var(--ink);border-radius:8px;padding:1px 3px;line-height:1.2}
-.act{position:absolute;z-index:2;border-radius:3px;padding:3px 4px;overflow:hidden;cursor:pointer;color:#fff;text-align:center;display:flex;flex-direction:column;justify-content:flex-start;transition:transform .12s}
+.act{position:absolute;z-index:2;border-radius:3px;padding:3px 4px;overflow:hidden;cursor:pointer;color:#fff;text-align:center;display:flex;flex-direction:column;justify-content:center;justify-content:safe center;transition:transform .12s}
 .act:active{transform:scale(.96)}
 .act .t{font-size:9px;font-weight:900;line-height:1.2;opacity:.95}
 .act .n{font-size:11px;font-weight:900;line-height:1.2;overflow-wrap:break-word}
