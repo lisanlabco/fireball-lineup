@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fireball">
+<meta name="theme-color" content="#e3262b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Fireball 2026 我的 Lineup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --fire:#e3262b; --ball:#2350a6; --fest:#1f9a46; --vill:#f26a2b; --sp:#f2a21b;
+  --bg:#bfe0f2; --paper:#fffaf0; --ink:#1d1d1f; --muted:#5d6670; --line:rgba(0,0,0,.08);
+  --px:1.55px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif}
+body{padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-area-inset-bottom) + 24px) env(safe-area-inset-left)}
+.wrap{max-width:720px;margin:0 auto;padding:12px 12px 0}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-bottom:10px}
+h1{margin:0;font-size:22px;font-weight:900;letter-spacing:.5px;color:var(--fire);line-height:1.1}
+h1 small{display:block;font-size:12px;color:var(--ink);font-weight:700;letter-spacing:1px}
+.seg{display:flex;background:#fff;border-radius:999px;padding:3px;border:2px solid var(--ink)}
+.seg button{white-space:nowrap;border:0;background:none;font:inherit;font-size:13px;font-weight:700;padding:6px 12px;border-radius:999px;color:var(--ink);cursor:pointer}
+.seg button.on{background:var(--ink);color:#fff}
+
+/* next card */
+.next{background:var(--paper);border:2px solid var(--ink);border-radius:16px;padding:12px 14px;margin-bottom:10px;box-shadow:0 3px 0 var(--ink)}
+.next .row{display:flex;gap:10px;align-items:flex-start}
+.next .lab{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;margin-bottom:2px}
+.next .big{font-size:19px;font-weight:900;line-height:1.25}
+.next .meta{font-size:13px;color:var(--muted);margin-top:2px}
+.stagepill{display:inline-block;color:#fff;font-weight:900;font-size:13px;padding:2px 9px;border-radius:999px;margin-right:6px;vertical-align:2px}
+.next .sep{height:1px;background:var(--line);margin:10px 0}
+.warn{color:var(--fire);font-weight:700}
+.nowall{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:10px}
+.nowall div{font-size:11px;line-height:1.3;padding:5px 6px;border-radius:8px;background:#f1ece2;}
+.nowall span.c{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.nowall b{display:block;font-size:10px}
+.sim{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;color:var(--muted)}
+.sim input{flex:1;accent-color:var(--fire)}
+
+.views{display:flex;gap:8px;margin:0 0 10px}
+.views button{flex:1;border:2px solid var(--ink);background:#fff;border-radius:12px;padding:9px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.views button.on{background:var(--fire);color:#fff;border-color:var(--fire)}
+.views .count{display:inline-block;min-width:20px;padding:0 5px;margin-left:4px;border-radius:999px;background:rgba(0,0,0,.12);font-size:12px}
+
+/* grid */
+.simnote{font-size:11px;color:var(--muted);margin-top:4px}
+.gridbox{background:var(--paper);border:2px solid var(--ink);border-radius:16px}
+.heads{display:grid;grid-template-columns:34px repeat(4,1fr);position:sticky;top:0;z-index:10;border-radius:14px 14px 0 0;overflow:hidden;box-shadow:0 2px 0 var(--ink)}
+.heads div{color:#fff;font-weight:900;font-size:13px;text-align:center;padding:8px 2px}
+.heads div:first-child{background:var(--paper)}
+.grid{position:relative;margin-left:0}
+.hour{position:absolute;left:0;right:0;border-top:1px dashed rgba(0,0,0,.12)}
+.hour span{position:absolute;left:3px;top:-8px;font-size:10px;font-weight:700;color:var(--muted);background:var(--paper);padding:0 2px}
+.col{position:absolute;top:0;bottom:0}
+.act{position:absolute;left:2px;right:2px;border-radius:7px;padding:3px 5px;overflow:hidden;cursor:pointer;border:1.5px solid transparent;transition:transform .12s}
+.act:active{transform:scale(.97)}
+.act .t{font-size:9.5px;font-weight:700;opacity:.8;line-height:1.2}
+.act .n{font-size:11.5px;font-weight:700;line-height:1.25;word-break:break-word}
+.act.sel{color:#fff}
+.act.sel .n::before{content:"★ "}
+.act.clash{outline:2.5px solid #111;outline-offset:-1px}
+.act.sp{left:2px;right:2px;padding:0 6px;display:flex;align-items:center;gap:6px;border-radius:5px}
+.act.sp .t,.act.sp .n{font-size:9.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nowline{position:absolute;left:30px;right:0;height:0;border-top:2px solid var(--fire);z-index:5;pointer-events:none}
+.nowline::before{content:"";position:absolute;left:-5px;top:-6px;width:10px;height:10px;border-radius:50%;background:var(--fire)}
+.hint{font-size:12px;color:var(--muted);text-align:center;margin:8px 0 2px}
+.nophoto{display:inline-block;font-size:9px;background:#111;color:#fff;border-radius:4px;padding:0 3px;margin-top:2px}
+
+/* list */
+.list{display:flex;flex-direction:column}
+.item{display:flex;gap:10px;align-items:center;background:var(--paper);border:2px solid var(--ink);border-radius:14px;padding:10px 12px}
+.item .bar{width:6px;align-self:stretch;border-radius:4px}
+.item .tm{font-size:13px;font-weight:900;min-width:88px}
+.item .nm{flex:1;font-weight:700;font-size:15px;line-height:1.3}
+.item .nm small{display:block;font-weight:500;font-size:12px;color:var(--muted)}
+.item button{border:0;background:#eee;border-radius:999px;width:30px;height:30px;font-size:16px;cursor:pointer;color:var(--muted)}
+.item.past{opacity:.45}
+.gap{font-size:12.5px;color:var(--muted);padding:6px 4px 6px 22px;border-left:2px dotted rgba(0,0,0,.25);margin-left:14px}
+.gap.bad{color:var(--fire);font-weight:700;border-left-color:var(--fire)}
+.empty{background:var(--paper);border:2px dashed rgba(0,0,0,.3);border-radius:14px;padding:28px 16px;text-align:center;color:var(--muted);font-size:14px;line-height:1.7}
+.tools{display:flex;gap:8px;margin-top:12px}
+.tools button{flex:1;border:2px solid var(--ink);background:#fff;border-radius:12px;padding:9px;font:inherit;font-weight:700;font-size:13px;cursor:pointer}
+.tools button.danger{color:var(--fire)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;font-weight:700;transition:transform .25s;z-index:50;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+footer{font-size:11px;color:var(--muted);text-align:center;margin:16px 0 0;line-height:1.6}
+@media (min-width:600px){:root{--px:1.9px}.act .n{font-size:13px}.act .t{font-size:10.5px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>FIREBALL 2026<small>ROCKIN' WONDERLAND・我的 Lineup</small></h1>
+    <div class="seg" id="daySeg">
+      <button data-day="d1">11/14 六</button>
+      <button data-day="d2">11/15 日</button>
+    </div>
+  </header>
+
+  <section class="next" id="next"></section>
+
+  <div class="views" id="viewSeg">
+    <button data-view="grid">全部節目表</button>
+    <button data-view="mine">我的行程<span class="count" id="cnt">0</span></button>
+  </div>
+
+  <div id="main"></div>
+
+  <footer>點節目加入／取消你的 lineup，選擇只存在你自己的手機裡，每個人各排各的。<br>時間依官方 11/14、11/15 節目表，以現場公告為準。<br><button id="shareSite" style="margin-top:10px;border:2px solid var(--ink);background:#fff;border-radius:999px;padding:7px 16px;font:inherit;font-weight:700;font-size:13px;cursor:pointer">分享這個網頁給朋友</button></footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const STAGES = {
+  fire:{name:'火舞台',color:'var(--fire)',hex:'#e3262b',tint:'#fbd5cf'},
+  ball:{name:'球舞台',color:'var(--ball)',hex:'#2350a6',tint:'#d3def3'},
+  fest:{name:'祭舞台',color:'var(--fest)',hex:'#1f9a46',tint:'#cfeccf'},
+  vill:{name:'火球村',color:'var(--vill)',hex:'#f26a2b',tint:'#fdd9c4'},
+  sp:{name:'特別演出',color:'var(--sp)',hex:'#f2a21b',tint:'#fde5b5'}
+};
+const COLS = ['fire','ball','fest','vill'];
+const SPECIAL = [
+  ['sp','13:55','14:05','日本環球影城 25 週年特別演出'],
+  ['sp','15:50','16:00','SK8 FIRE X 精神時光屋滑板道場'],
+  ['sp','19:35','19:45','樂天女孩']
+];
+const DAYS = {
+  d1:{label:'11/14（六）',date:'2026-11-14',acts:[
+    ['fire','11:15','11:55','滅火器 Fire EX.'],
+    ['fire','13:05','13:45','Gummy B'],
+    ['fire','15:00','15:40','血肉果汁機 Flesh Juicer ft. Tatsuya Amano (Crossfaith)'],
+    ['fire','16:55','17:35','蛋堡'],
+    ['fire','18:45','19:25','鄭宜農 Enno Cheng'],
+    ['fire','20:40','21:40','FEVER 333 (US)'],
+    ['ball','12:10','12:50','淺堤 Shallow Levée ft. 鄭宜農 Enno Cheng'],
+    ['ball','14:05','14:45','Isyana Sarasvati (ID)'],
+    ['ball','16:00','16:40','生祥樂隊'],
+    ['ball','17:50','18:30','Northern19 (JP)','np'],
+    ['ball','19:45','20:25','Sambomaster (JP)'],
+    ['fest','11:50','12:20','憂憂 Yō-Yō'],
+    ['fest','13:00','13:30','BUTTER RIOT'],
+    ['fest','14:10','14:40','葛西瓦 Kasiwa'],
+    ['fest','15:20','15:50','GYMV (TH)'],
+    ['fest','16:30','17:00','黃宇寒 Han'],
+    ['fest','17:40','18:10','PiA 吳蓓雅 ft. 邱淑蟬'],
+    ['fest','18:50','19:20','Ureuk and The Gypsies (KR)'],
+    ['fest','20:00','20:30','隨性 Random'],
+    ['vill','13:35','14:05','臺澎金馬使用說明書－法白'],
+    ['vill','14:45','15:15','MOMO 家族歡樂會（泡芙姐姐 & 柚子哥哥）'],
+    ['vill','15:55','16:25','異鄉人的憤怒舞鼓教室'],
+    ['vill','17:05','17:35','經期似超人 小紅帽 X 宅女小紅'],
+    ['vill','18:15','18:45','讓夢轉動 楊元慶'],
+    ...SPECIAL
+  ]},
+  d2:{label:'11/15（日）',date:'2026-11-15',acts:[
+    ['fire','12:10','12:50','EmptyORio ft. Yappy'],
+    ['fire','14:05','14:45','TRASH'],
+    ['fire','16:00','16:40','洪佩瑜 Pei-Yu Hung ft. ???'],
+    ['fire','17:50','18:30','HANA (JP)'],
+    ['fire','19:45','20:35','Dragon Ash (JP)','np'],
+    ['ball','11:15','11:55','普通隊長 Captain Ordinary'],
+    ['ball','13:05','13:45','陳嫺靜 HSIEN CHING'],
+    ['ball','15:00','15:40','Crystal Lake (JP) ft. GIGO'],
+    ['ball','16:55','17:35',"EGO-WRAPPIN' (JP)"],
+    ['ball','18:45','19:25','美秀集團'],
+    ['ball','20:45','21:45','滅火器 Fire EX.'],
+    ['fest','11:50','12:20','公館青少年 GGteens'],
+    ['fest','13:00','13:30','C.Holly'],
+    ['fest','14:10','14:40','陳以恆'],
+    ['fest','15:20','15:50','debloop'],
+    ['fest','16:30','17:00','DSPS'],
+    ['fest','17:40','18:10','擊沈女孩 DESTROYERS'],
+    ['fest','18:50','19:20','胖虎'],
+    ['fest','20:00','20:30','固定客 GOODICK'],
+    ['vill','13:35','14:05','鍋犬 Joe Trane・Timberland Booth PARADE 踢不爛大遊行'],
+    ['vill','14:45','15:15','卡祖大帝國 KAZOO KINGDOM'],
+    ['vill','15:55','16:25','客家就是你家 黃子軒 x 王鍾錡 x 王鍾惟'],
+    ['vill','17:05','17:35','魏姬、小花的濃妝龐克 time'],
+    ['vill','18:15','18:45','三個不結婚的女人 Talk & Show'],
+    ...SPECIAL
+  ]}
+};
+const m = s => { const [h,mm] = s.split(':').map(Number); return h*60+mm; };
+const hm = n => String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');
+const esc = s => s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+for (const k in DAYS) DAYS[k].acts = DAYS[k].acts.map(([st,s,e,n,f]) => ({id:k+'-'+st+'-'+s, day:k, st, s:m(s), e:m(e), n, np:f==='np'}));
+
+const START = 11*60, END = 21*60+50;
+const KEY = 'fireball2026-lineup';
+let picks = new Set();
+try { picks = new Set(JSON.parse(localStorage.getItem(KEY) || '[]')); } catch(e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify([...picks])); } catch(e) {} };
+
+function tpNow(){
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date()).map(x=>[x.type,x.value]));
+  return {date:`${p.year}-${p.month}-${p.day}`, min:(+p.hour%24)*60 + +p.minute};
+}
+const t0 = tpNow();
+let day = t0.date === DAYS.d2.date ? 'd2' : 'd1';
+let view = 'grid';
+let sim = 12*60;
+
+const isLive = () => tpNow().date === DAYS[day].date;
+const nowMin = () => isLive() ? tpNow().min : sim;
+const mine = () => DAYS[day].acts.filter(a=>picks.has(a.id)).sort((a,b)=>a.s-b.s||a.e-b.e);
+const pill = st => `<span class="stagepill" style="background:${STAGES[st].hex}">${STAGES[st].name}</span>`;
+const dur = n => n>=60 ? `${Math.floor(n/60)} 小時${n%60?` ${n%60} 分`:''}` : `${n} 分`;
+
+function clashes(list){
+  const bad = new Set();
+  for (let i=0;i<list.length;i++) for (let j=i+1;j<list.length;j++)
+    if (list[j].s < list[i].e && list[i].s < list[j].e) { bad.add(list[i].id); bad.add(list[j].id); }
+  return bad;
+}
+
+function renderNext(){
+  const live = isLive(), now = nowMin(), my = mine();
+  const cur = my.filter(a=>a.s<=now && now<a.e);
+  const nxt = my.find(a=>a.s>now);
+  let h = '';
+  if (!my.length){
+    h += `<div class="lab">下一站</div><div class="big">還沒選節目</div><div class="meta">在下面的節目表點你想看的團，這裡就會告訴你下一個要去哪個舞台。</div>`;
+  } else {
+    if (cur.length){
+      h += `<div class="lab">現在正在看</div>`;
+      cur.forEach(a=>{ h += `<div class="big">${pill(a.st)}${esc(a.n)}</div><div class="meta">${hm(a.s)}–${hm(a.e)}・還剩 ${dur(a.e-now)}</div>`; });
+      h += `<div class="sep"></div>`;
+    }
+    if (nxt){
+      const walk = cur.length && cur.every(c=>c.st!==nxt.st);
+      const early = cur.length ? Math.max(...cur.map(c=>c.e)) - nxt.s : 0;
+      h += `<div class="lab">下一站</div><div class="big">${pill(nxt.st)}${esc(nxt.n)}</div>
+        <div class="meta">${hm(nxt.s)} 開始・還有 ${dur(nxt.s-now)}${nxt.np?'・<b>禁止拍照錄影</b>':''}</div>`;
+      if (early>0) h += `<div class="meta warn">跟現在這場重疊 ${early} 分鐘，要提早離場</div>`;
+      else if (walk) h += `<div class="meta">結束後移動到${STAGES[nxt.st].name}</div>`;
+    } else if (!cur.length){
+      const first = my[0];
+      h += now < first.s ? '' : `<div class="lab">下一站</div><div class="big">今天的 lineup 都看完了 🎉</div>`;
+    } else {
+      h += `<div class="lab">下一站</div><div class="meta">這是你今天最後一場</div>`;
+    }
+  }
+  // what's on now everywhere
+  const all = DAYS[day].acts;
+  h += `<div class="nowall">` + COLS.map(st=>{
+    const a = all.find(x=>x.st===st && x.s<=now && now<x.e);
+    const b = all.find(x=>x.st===st && x.s>now);
+    const txt = a ? `<span class="c">${esc(a.n)}</span>` : (b ? `<span class="c" style="opacity:.7">${hm(b.s)} ${esc(b.n)}</span>` : '<span style="opacity:.5">已結束</span>');
+    return `<div><b style="color:${STAGES[st].hex}">${STAGES[st].name}${a?' ●':''}</b>${txt}</div>`;
+  }).join('') + `</div>`;
+  if (!live){
+    h += `<div class="sim"><span style="white-space:nowrap">預覽 ${hm(sim)}</span><input type="range" min="${START}" max="${END}" step="5" value="${sim}" id="simR"></div><div class="simnote">還沒到活動日，可以拖拉看看；11/14、11/15 當天會自動用現在時間。</div>`;
+  }
+  document.getElementById('next').innerHTML = h;
+  const r = document.getElementById('simR');
+  if (r) r.oninput = e => { sim = +e.target.value; renderNext(); if (view==='grid') placeNow(); else renderMain(); };
+}
+
+function placeNow(){
+  const g = document.querySelector('.grid'); if (!g) return;
+  let ln = g.querySelector('.nowline');
+  const now = nowMin();
+  if (now < START || now > END){ if (ln) ln.remove(); return; }
+  if (!ln){ ln = document.createElement('div'); ln.className='nowline'; g.appendChild(ln); }
+  ln.style.top = `calc(${now-START} * var(--px))`;
+}
+
+function renderGrid(){
+  const acts = DAYS[day].acts, bad = clashes(mine());
+  let h = `<div class="gridbox"><div class="heads">${'<div></div>'+COLS.map(c=>`<div style="background:${STAGES[c].hex}">${STAGES[c].name}</div>`).join('')}</div>`;
+  h += `<div class="grid" style="height:calc(${END-START+12} * var(--px));margin-top:8px">`;
+  for (let t=START; t<=END; t+=60) h += `<div class="hour" style="top:calc(${t-START} * var(--px))"><span>${hm(t)}</span></div>`;
+  const colW = `((100% - 34px) / 4)`;
+  acts.forEach(a=>{
+    const S = STAGES[a.st], sel = picks.has(a.id);
+    const ci = a.st==='sp' ? 0 : COLS.indexOf(a.st);
+    const width = a.st==='sp' ? `calc(2 * ${colW})` : `calc(${colW})`;
+    const style = `top:calc(${a.s-START} * var(--px));height:calc(${a.e-a.s} * var(--px) - 2px);left:calc(34px + ${ci} * ${colW} + 2px);width:calc(${width} - 4px);right:auto;`
+      + (sel ? `background:${S.hex};border-color:${S.hex};` : `background:${S.tint};border-color:${S.hex}55;`)
+      + (a.st==='sp' && !sel ? 'color:#7a4a00;' : '');
+    h += `<div class="act ${a.st==='sp'?'sp':''} ${sel?'sel':''} ${bad.has(a.id)?'clash':''}" data-id="${a.id}" style="${style}">
+      <div class="t">${hm(a.s)}${a.st==='sp'?'':'–'+hm(a.e)}</div><div class="n">${esc(a.n)}</div></div>`;
+  });
+  h += `</div></div><div class="hint">點一下加入 ★，再點一次取消；黑框代表時間撞到</div>`;
+  return h;
+}
+
+function renderList(){
+  const my = mine(), now = nowMin();
+  if (!my.length) return `<div class="empty">${DAYS[day].label} 還沒有選任何節目。<br>切到「全部節目表」點你想看的團就會出現在這裡。</div>`;
+  let h = '<div class="list">';
+  my.forEach((a,i)=>{
+    if (i>0){
+      const p = my[i-1], g = a.s - p.e;
+      if (g < 0) h += `<div class="gap bad">跟上一場重疊 ${-g} 分鐘，二選一或提早離場</div>`;
+      else if (p.st===a.st) h += `<div class="gap">空檔 ${dur(g)}・同一個舞台，原地等</div>`;
+      else h += `<div class="gap">空檔 ${g?dur(g):'0 分'}・移動到 <b style="color:${STAGES[a.st].hex}">${STAGES[a.st].name}</b>${g<10?'（很趕）':''}</div>`;
+    }
+    h += `<div class="item ${a.e<=now?'past':''}"><div class="bar" style="background:${STAGES[a.st].hex}"></div>
+      <div class="tm">${hm(a.s)}–${hm(a.e)}</div>
+      <div class="nm">${esc(a.n)}<small>${STAGES[a.st].name}${a.np?'・禁止拍照錄影':''}</small></div>
+      <button data-rm="${a.id}" aria-label="移除">×</button></div>`;
+  });
+  h += `</div><div class="tools"><button id="copyBtn">複製我的 lineup</button><button class="danger" id="clrBtn">清除這天</button></div>`;
+  return h;
+}
+
+function renderMain(){
+  document.getElementById('main').innerHTML = view==='grid' ? renderGrid() : renderList();
+  if (view==='grid') placeNow();
+  document.getElementById('cnt').textContent = mine().length;
+  document.querySelectorAll('#daySeg button').forEach(b=>b.classList.toggle('on', b.dataset.day===day));
+  document.querySelectorAll('#viewSeg button').forEach(b=>b.classList.toggle('on', b.dataset.view===view));
+}
+function render(){ renderNext(); renderMain(); }
+
+function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.classList.add('show'); clearTimeout(toast.h); toast.h=setTimeout(()=>el.classList.remove('show'),1600); }
+
+document.getElementById('daySeg').onclick = e => { const d=e.target.dataset.day; if(d){ day=d; render(); } };
+document.getElementById('viewSeg').onclick = e => { const b=e.target.closest('button'); if(b){ view=b.dataset.view; render(); window.scrollTo({top:0}); } };
+let clrArmed = false;
+document.getElementById('main').onclick = async e => {
+  const act = e.target.closest('.act');
+  if (act){ const id=act.dataset.id; picks.has(id)?picks.delete(id):picks.add(id); save(); render(); return; }
+  const rm = e.target.closest('[data-rm]');
+  if (rm){ picks.delete(rm.dataset.rm); save(); render(); return; }
+  if (e.target.id==='copyBtn'){
+    let txt = 'FIREBALL 2026 我的 lineup\n';
+    ['d1','d2'].forEach(k=>{
+      const list = DAYS[k].acts.filter(a=>picks.has(a.id)).sort((a,b)=>a.s-b.s);
+      if (list.length){ txt += `\n${DAYS[k].label}\n` + list.map(a=>`${hm(a.s)}–${hm(a.e)}  ${STAGES[a.st].name}  ${a.n}`).join('\n') + '\n'; }
+    });
+    try { await navigator.clipboard.writeText(txt); toast('已複製，可以貼給朋友'); } catch(err){ toast('這裡無法複製，請截圖分享'); }
+    return;
+  }
+  if (e.target.id==='clrBtn'){
+    if (!clrArmed){ clrArmed=true; e.target.textContent='再按一次確認清除'; setTimeout(()=>{clrArmed=false; const b=document.getElementById('clrBtn'); if(b) b.textContent='清除這天';},3000); return; }
+    DAYS[day].acts.forEach(a=>picks.delete(a.id)); save(); clrArmed=false; render(); toast('已清除');
+  }
+};
+document.getElementById('shareSite').onclick = async () => {
+  const url = location.href.split('#')[0];
+  if (navigator.share) { try { await navigator.share({title:'Fireball 2026 排自己的 lineup', url}); return; } catch(e) { if (e.name==='AbortError') return; } }
+  try { await navigator.clipboard.writeText(url); toast('網址已複製'); } catch(e) { toast(url); }
+};
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+render();
+setInterval(()=>{ if (isLive()) { renderNext(); if (view==='grid') placeNow(); } }, 30000);
+</script>
+</body>
+</html>
