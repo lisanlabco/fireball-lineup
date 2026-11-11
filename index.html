@@ -29,6 +29,11 @@ body{
   padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-area-inset-bottom) + 96px) env(safe-area-inset-left);
   overflow-x:hidden;
 }
+::selection{background:var(--hi);color:var(--ink)}
+button,a{touch-action:manipulation}
+:focus-visible{outline:3px solid var(--ball);outline-offset:3px;border-radius:10px}
+.ic{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px}
+.ic.f{fill:currentColor;stroke-width:1.6}
 .disp{font-family:"Dela Gothic One","Noto Sans TC",sans-serif;font-weight:400}
 .wrap{max-width:720px;margin:0 auto;padding:0 12px;position:relative}
 
@@ -53,7 +58,7 @@ header{position:relative;z-index:1;text-align:center;padding:6px 0 12px}
 .next{position:relative;z-index:1;padding:12px 14px;margin-bottom:14px}
 .next .lab{display:inline-block;font-size:11px;font-weight:900;color:#fff;background:var(--ink);border-radius:999px;padding:1px 9px;letter-spacing:1px;margin-bottom:6px}
 .next .big{font-size:19px;font-weight:900;line-height:1.3}
-.next .meta{font-size:13px;color:var(--muted);margin-top:3px;font-weight:500}
+.next .meta{font-size:13px;color:var(--muted);margin-top:3px;font-weight:500;font-variant-numeric:tabular-nums}
 .stagepill{display:inline-block;color:#fff;font-weight:900;font-size:13px;padding:2px 10px;border-radius:6px;margin-right:6px;vertical-align:2px;border:2px solid var(--ink)}
 .next .sep{height:0;border-top:2px dashed rgba(42,29,20,.25);margin:10px 0}
 .warn{color:var(--fire)!important;font-weight:900!important}
@@ -65,13 +70,13 @@ header{position:relative;z-index:1;text-align:center;padding:6px 0 12px}
 .sim input{flex:1;accent-color:var(--orange)}
 .simnote{font-size:11px;color:var(--muted);margin-top:4px}
 .acts{display:flex;gap:8px;margin-top:12px}
-.acts button{flex:1;border:2.5px solid var(--ink);background:#fff;border-radius:12px;padding:8px 4px;font:inherit;font-weight:900;font-size:13px;cursor:pointer;box-shadow:0 3px 0 var(--ink)}
+.acts button{display:flex;align-items:center;justify-content:center;gap:5px;flex:1;border:2.5px solid var(--ink);background:#fff;border-radius:12px;padding:8px 4px;font:inherit;font-weight:900;font-size:13px;cursor:pointer;box-shadow:0 3px 0 var(--ink)}
 .acts button.y{background:var(--hi)}
 .help{position:relative;z-index:1;display:flex;gap:10px;align-items:center;background:var(--hi);border:3px solid var(--ink);border-radius:14px;box-shadow:3px 4px 0 var(--ink);padding:10px 12px;margin-bottom:12px;font-size:13px;font-weight:900;line-height:1.5}
-.help span{font-size:22px}
+.help .ic{width:28px;height:28px}
 
 .views{position:fixed;z-index:40;left:0;right:0;bottom:0;display:flex;gap:10px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:3px solid var(--ink);max-width:720px;margin:0 auto}
-.views button{flex:1;border:3px solid var(--ink);background:#fff;border-radius:14px;padding:10px 6px;font:inherit;font-weight:900;font-size:15px;cursor:pointer;box-shadow:0 3px 0 var(--ink)}
+.views button{display:flex;align-items:center;justify-content:center;gap:6px;flex:1;border:3px solid var(--ink);background:#fff;border-radius:14px;padding:10px 6px;font:inherit;font-weight:900;font-size:15px;cursor:pointer;box-shadow:0 3px 0 var(--ink)}
 .views button.on{background:var(--orange);color:#fff}
 .views .count{display:inline-block;min-width:22px;padding:0 6px;margin-left:5px;border-radius:999px;background:var(--hi);color:var(--ink);font-size:12px;border:2px solid var(--ink)}
 
@@ -85,26 +90,26 @@ header{position:relative;z-index:1;text-align:center;padding:6px 0 12px}
 .hour span{position:absolute;left:calc(-1 * var(--axis) + 1px);top:-11px;font-family:"Dela Gothic One",sans-serif;font-size:10px;color:var(--ink);background:#fff;border:2px solid var(--ink);border-radius:8px;padding:1px 3px;line-height:1.2}
 .act{position:absolute;z-index:2;border-radius:3px;padding:3px 4px;overflow:hidden;cursor:pointer;color:#fff;text-align:center;display:flex;flex-direction:column;justify-content:center;justify-content:safe center;transition:transform .12s}
 .act:active{transform:scale(.96)}
-.act .t{font-size:9px;font-weight:900;line-height:1.2;opacity:.95}
+.act .t{font-size:9px;font-weight:900;line-height:1.2;opacity:.95;font-variant-numeric:tabular-nums}
 .act .n{font-size:11px;font-weight:900;line-height:1.2;overflow-wrap:break-word}
 .act.sel{background:var(--hi)!important;color:var(--ink);border:2.5px solid var(--ink);padding:1px 2px;border-radius:6px;box-shadow:2px 3px 0 var(--ink);z-index:3}
-.act.sel .n::before{content:"★ "}
-.act.clash{background-image:repeating-linear-gradient(45deg,transparent 0 6px,rgba(232,38,42,.28) 6px 12px)}
+.act.sel .ic{width:12px;height:12px;vertical-align:-1px;margin-right:2px}
+.act.sel.clash{background:repeating-linear-gradient(45deg,var(--hi) 0 7px,#ffb39e 7px 13px)!important}
 .act.sp{flex-direction:row;align-items:center;justify-content:center;gap:6px;padding:0 6px;color:var(--ink);border-radius:2px}
 .act.sp .t,.act.sp .n{font-size:9.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nowline{position:absolute;left:calc(var(--axis) - 6px);right:0;height:0;border-top:3px solid var(--fire);z-index:6;pointer-events:none}
-.nowline::before{content:"NOW";position:absolute;left:-36px;top:-10px;font:10px "Dela Gothic One",sans-serif;color:#fff;background:var(--fire);border:2px solid var(--ink);border-radius:6px;padding:0 3px}
+.nowline{position:absolute;left:var(--axis);right:0;height:0;border-top:3px solid var(--fire);z-index:6;pointer-events:none}
+.nowline::before{content:"NOW";position:absolute;right:4px;top:-11px;font:10px "Dela Gothic One",sans-serif;color:#fff;background:var(--fire);border:2px solid var(--ink);border-radius:6px;padding:0 3px}
 .hint{font-size:12px;font-weight:700;text-align:center;margin:12px 0 2px}
 
 /* list */
 .list{display:flex;flex-direction:column}
 .item{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;box-shadow:3px 4px 0 var(--ink)}
 .item .bar{width:8px;align-self:stretch;border-radius:4px;border:2px solid var(--ink)}
-.item .tm{font-family:"Dela Gothic One",sans-serif;font-size:13px;min-width:92px}
+.item .tm{font-family:"Dela Gothic One",sans-serif;font-size:13px;min-width:92px;font-variant-numeric:tabular-nums}
 .item .nm{flex:1;font-weight:900;font-size:15px;line-height:1.3}
 .item .nm small{display:block;font-weight:700;font-size:12px;color:var(--muted)}
-.item button{border:2px solid var(--ink);background:#fff;border-radius:999px;width:30px;height:30px;font-size:15px;cursor:pointer;color:var(--ink);font-weight:900}
-.item .cal{display:inline-flex;align-items:center;justify-content:center;border:2px solid var(--ink);background:var(--hi);border-radius:999px;width:34px;height:34px;font-size:16px;text-decoration:none;box-shadow:0 2px 0 var(--ink)}
+.item button{display:inline-flex;align-items:center;justify-content:center;border:2px solid var(--ink);background:#fff;border-radius:999px;width:36px;height:36px;cursor:pointer;color:var(--ink);flex:none}
+.item .cal{display:inline-flex;align-items:center;justify-content:center;border:2px solid var(--ink);background:var(--hi);border-radius:999px;width:36px;height:36px;color:var(--ink);text-decoration:none;box-shadow:0 2px 0 var(--ink);flex:none}
 .item.past{opacity:.5}
 .gap{font-size:12.5px;font-weight:700;padding:7px 4px 7px 22px;border-left:3px dotted var(--ink);margin-left:16px}
 .gap.bad{color:var(--fire);border-left-color:var(--fire)}
@@ -113,7 +118,7 @@ header{position:relative;z-index:1;text-align:center;padding:6px 0 12px}
 .tools button,.remind button{flex:1;border:3px solid var(--ink);background:#fff;border-radius:14px;padding:9px 6px;font:inherit;font-weight:900;font-size:13px;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
 .tools button.danger{color:var(--fire)}
 .remind{margin-top:16px;padding:12px 14px}
-.remind h3{margin:0 0 4px;font-size:15px;font-weight:900}
+.remind h3{display:flex;align-items:center;gap:6px;margin:0 0 6px;font-size:15px;font-weight:900}
 .remind p{margin:0 0 10px;font-size:12px;color:var(--muted);line-height:1.6}
 .remind .row{display:flex;gap:10px}
 .remind button.main{background:var(--hi)}
@@ -153,8 +158,8 @@ footer{position:relative;font-size:11px;font-weight:700;text-align:center;margin
   <section class="next card" id="next"></section>
 
   <div class="views" id="viewSeg">
-    <button data-view="grid">📅 全部節目表</button>
-    <button data-view="mine">★ 我的行程<span class="count" id="cnt">0</span></button>
+    <button data-view="grid"><svg class="ic" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="16" rx="2"/><path d="M9 4v16M15 4v16"/></svg>全部節目表</button>
+    <button data-view="mine"><svg class="ic f" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>我的行程<span class="count" id="cnt">0</span></button>
   </div>
 
   <div id="main"></div>
@@ -181,6 +186,14 @@ const STAGES = {
   sp:{name:'特別演出',hex:'#f7a51c',lane:'#f7a51c'}
 };
 const COLS = ['fire','ball','fest','vill'];
+const IC = {
+  star:'<path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/>',
+  cal:'<rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  bell:'<path d="M6 16v-5a6 6 0 0112 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 004 0"/>',
+  tap:'<path d="M9 11V5.5a1.5 1.5 0 013 0V11m0-1.5a1.5 1.5 0 013 0V12m0-1a1.5 1.5 0 013 0v3.5c0 3.6-2.4 6.5-6 6.5s-5-1.6-6.4-4l-1.9-3.3a1.4 1.4 0 012.3-1.6L9 14"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>'
+};
+const icon = (n, fill) => `<svg class="ic${fill?' f':''}" viewBox="0 0 24 24" aria-hidden="true">${IC[n]}</svg>`;
 const SPECIAL = [
   ['sp','13:55','14:05','日本環球影城 25 週年特別演出'],
   ['sp','15:50','16:00','SK8 FIRE X 精神時光屋滑板道場'],
@@ -300,7 +313,7 @@ function renderNext(){
       else if (walk) h += `<div class="meta">結束後移動到${STAGES[nxt.st].name}</div>`;
     } else if (!cur.length){
       const first = my[0];
-      h += now < first.s ? '' : `<div class="lab">下一站</div><div class="big">今天的 lineup 都看完了 🎉</div>`;
+      h += now < first.s ? '' : `<div class="lab">下一站</div><div class="big">今天的 lineup 都看完了</div>`;
     } else {
       h += `<div class="lab">下一站</div><div class="meta">這是你今天最後一場</div>`;
     }
@@ -309,13 +322,13 @@ function renderNext(){
   h += `<div class="nowall">` + COLS.map(st=>{
     const a = all.find(x=>x.st===st && x.s<=now && now<x.e);
     const b = all.find(x=>x.st===st && x.s>now);
-    const txt = a ? `<span class="c">${esc(a.n)}</span>` : (b ? `<span class="c" style="opacity:.65">${hm(b.s)} ${esc(b.n)}</span>` : '<span style="opacity:.5">已結束</span>');
+    const txt = a ? `<span class="c">${esc(a.n)}</span>` : (b ? `<span class="c" style="color:var(--muted)">${hm(b.s)} ${esc(b.n)}</span>` : '<span style="color:var(--muted)">已結束</span>');
     return `<div><b style="background:${STAGES[st].hex}">${STAGES[st].name}${a?' ●':''}</b>${txt}</div>`;
   }).join('') + `</div>`;
   if (!live){
-    h += `<div class="sim"><span style="white-space:nowrap">預覽 ${hm(sim)}</span><input type="range" min="${START}" max="${END}" step="5" value="${sim}" id="simR"></div><div class="simnote">還沒到活動日，可以拖拉看看；11/14、11/15 當天會自動用現在時間。</div>`;
+    h += `<div class="sim"><span style="white-space:nowrap">預覽 ${hm(sim)}</span><input type="range" min="${START}" max="${END}" step="5" value="${sim}" id="simR"></div><div class="simnote">預覽用。活動當天會自動換成現在時間。</div>`;
   }
-  if (my.length) h += `<div class="acts"><button data-go="mine">★ 看我的行程</button><button class="y" data-go="remind">⏰ 設定開演提醒</button></div>`;
+  if (my.length) h += `<div class="acts"><button data-go="mine">${icon('star',1)}看我的行程</button><button class="y" data-go="remind">${icon('bell')}設定開演提醒</button></div>`;
   document.getElementById('next').innerHTML = h;
   const r = document.getElementById('simR');
   if (r) r.oninput = e => { sim = +e.target.value; renderNext(); if (view==='grid') placeNow(); else renderMain(); };
@@ -334,7 +347,7 @@ function renderGrid(){
   const acts = DAYS[day].acts, bad = clashes(mine());
   const laneW = `((100% - var(--axis) - 3 * var(--gap)) / 4)`;
   const left = i => `calc(var(--axis) + ${i} * (${laneW} + var(--gap)))`;
-  let h = mine().length ? '' : `<div class="help"><span>👆</span>直接點下面的格子，就會加進「我的行程」並變成黃色 ★。上面會告訴你下一站去哪個舞台。</div>`;
+  let h = mine().length ? '' : `<div class="help">${icon('tap')}直接點下面的格子，就會加進「我的行程」並變成黃色。上面會告訴你下一站去哪個舞台。</div>`;
   h += `<div class="gridbox"><div class="heads">${COLS.map(c=>`<div style="background:${STAGES[c].hex}">${STAGES[c].name}</div>`).join('')}</div>`;
   h += `<div class="grid" style="height:calc(${END-START+14} * var(--px))">`;
   COLS.forEach((c,i)=>{ h += `<div class="lane" style="left:${left(i)};width:calc(${laneW});background:${STAGES[c].lane}"></div>`; });
@@ -344,16 +357,16 @@ function renderGrid(){
     const ci = a.st==='sp' ? 0 : COLS.indexOf(a.st);
     const width = a.st==='sp' ? `calc(2 * ${laneW} + var(--gap) - 4px)` : `calc(${laneW} - 10px)`;
     const style = `top:calc(${a.s-START+7} * var(--px));height:calc(${a.e-a.s} * var(--px));left:calc(${left(ci)} + ${a.st==='sp'?2:5}px);width:${width};background:${S.hex};`;
-    h += `<div class="act ${a.st==='sp'?'sp':''} ${sel?'sel':''} ${bad.has(a.id)?'clash':''}" data-id="${a.id}" style="${style}">
-      <div class="t">${hm(a.s)}${a.st==='sp'?'':'–'+hm(a.e)}</div><div class="n">${esc(a.n)}</div></div>`;
+    h += `<div class="act ${a.st==='sp'?'sp':''} ${sel?'sel':''} ${bad.has(a.id)?'clash':''}" data-id="${a.id}" title="${esc(a.n)}" style="${style}">
+      <div class="t">${hm(a.s)}${a.st==='sp'?'':'–'+hm(a.e)}</div><div class="n">${sel?icon('star',1):''}${esc(a.n)}</div></div>`;
   });
-  h += `</div></div><div class="hint">點一下加入 ★，再點一次取消；斜線代表時間撞到</div>`;
+  h += `</div></div><div class="hint">點格子加入，再點一次取消；有紅色斜線代表時間撞到</div>`;
   return h;
 }
 
 function renderList(){
   const my = mine(), now = nowMin();
-  const remind = `<div class="remind card"><h3>⏰ 開演提醒</h3><p><b>iPhone：</b>點每一場右邊的 📅，跳出畫面後按「加入行事曆」，開演前 10 分鐘就會提醒。<br><b>Android／電腦：</b>按下面黃色按鈕，一次加入全部。<br>「App 內提醒」要網頁開著才會響，當備用就好。</p>
+  const remind = `<div class="remind card"><h3>${icon('bell')}開演提醒</h3><p><b>iPhone：</b>點每一場右邊的黃色日曆鈕，跳出畫面後按「加入行事曆」，開演前 10 分鐘就會提醒。<br><b>Android／電腦：</b>按下面黃色按鈕，一次加入全部。<br>「App 內提醒」要網頁開著才會響，當備用就好。</p>
     <div class="row"><button class="main" id="icsBtn">加到行事曆（兩天全部）</button><button id="notiBtn">${alertsOn && notiPerm()==='granted' ? 'App 內提醒：已開啟' : '開啟 App 內提醒'}</button></div><div id="icsBox" class="icsbox"></div></div>`;
   if (!my.length) return `<div class="empty card">${DAYS[day].label} 還沒有選任何節目。<br>切到「全部節目表」點你想看的團就會出現在這裡。</div>` + remind;
   let h = '<div class="list">';
@@ -367,7 +380,7 @@ function renderList(){
     h += `<div class="item card ${a.e<=now?'past':''}"><div class="bar" style="background:${STAGES[a.st].hex}"></div>
       <div class="tm">${hm(a.s)}–${hm(a.e)}</div>
       <div class="nm">${esc(a.n)}<small>${STAGES[a.st].name}${a.np?'・禁止拍照錄影':''}</small></div>
-      <a class="cal" href="cal-${a.id.replace(/:/g,'')}.ics" aria-label="加到行事曆">📅</a><button data-rm="${a.id}" aria-label="移除">×</button></div>`;
+      <a class="cal" href="cal-${a.id.replace(/:/g,'')}.ics" aria-label="加到行事曆">${icon('cal')}</a><button data-rm="${a.id}" aria-label="移除">${icon('x')}</button></div>`;
   });
   h += `</div><div class="tools"><button id="copyBtn">複製我的 lineup</button><button class="danger" id="clrBtn">清除這天</button></div>` + remind;
   return h;
@@ -443,7 +456,7 @@ function exportICS(){
   const iOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
   const box = document.getElementById('icsBox');
   if (box && !iOS) box.innerHTML = `如果沒有跳出行事曆，<a href="${url}" download="fireball2026-lineup.ics" target="_blank" rel="noopener">點這裡打開行事曆檔</a>${iOS ? '，再按「全部加入」' : '，下載後點開檔案'}。`;
-  if (iOS){ toast('iPhone 請點每一場右邊的 📅 加入'); document.querySelector('.item .cal')?.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+  if (iOS){ toast('iPhone 請點每一場右邊的黃色日曆鈕'); document.querySelector('.item .cal')?.scrollIntoView({behavior:'smooth',block:'center'}); return; }
   const a = document.createElement('a'); a.href=url; a.download='fireball2026-lineup.ics'; document.body.appendChild(a); a.click(); a.remove();
   toast('已下載，打開檔案就會加進行事曆');
 }
@@ -455,7 +468,7 @@ document.getElementById('alert').onclick = e => e.currentTarget.classList.remove
 let clrArmed = false;
 document.getElementById('main').onclick = async e => {
   const act = e.target.closest('.act');
-  if (act){ const id=act.dataset.id, a=DAYS[day].acts.find(x=>x.id===id); if(picks.has(id)){ picks.delete(id); toast('已移除：'+a.n); } else { picks.add(id); toast('★ 已加入：'+a.n); } save(); render(); return; }
+  if (act){ const id=act.dataset.id, a=DAYS[day].acts.find(x=>x.id===id); if(picks.has(id)){ picks.delete(id); toast('已移除：'+a.n); } else { picks.add(id); toast('已加入：'+a.n); } save(); render(); return; }
   const rm = e.target.closest('[data-rm]');
   if (rm){ picks.delete(rm.dataset.rm); save(); render(); return; }
   if (e.target.id==='icsBtn'){ exportICS(); return; }
