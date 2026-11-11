@@ -6,108 +6,142 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Fireball">
-<meta name="theme-color" content="#e3262b">
+<meta name="theme-color" content="#9fd6f0">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Fireball 2026 我的 Lineup</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --fire:#e3262b; --ball:#2350a6; --fest:#1f9a46; --vill:#f26a2b; --sp:#f2a21b;
-  --bg:#bfe0f2; --paper:#fffaf0; --ink:#1d1d1f; --muted:#5d6670; --line:rgba(0,0,0,.08);
-  --px:1.55px;
+  --fire:#e8262a; --ball:#1f4ea3; --fest:#1e9a48; --vill:#f15a24; --sp:#f7a51c;
+  --sky:#9fd6f0; --ink:#2a1d14; --muted:#5a5048; --hi:#ffd23f; --orange:#f26322;
+  --px:1.85px; --axis:40px; --gap:4px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif}
-body{padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-area-inset-bottom) + 24px) env(safe-area-inset-left)}
-.wrap{max-width:720px;margin:0 auto;padding:12px 12px 0}
-header{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-bottom:10px}
-h1{margin:0;font-size:22px;font-weight:900;letter-spacing:.5px;color:var(--fire);line-height:1.1}
-h1 small{display:block;font-size:12px;color:var(--ink);font-weight:700;letter-spacing:1px}
-.seg{display:flex;background:#fff;border-radius:999px;padding:3px;border:2px solid var(--ink)}
-.seg button{white-space:nowrap;border:0;background:none;font:inherit;font-size:13px;font-weight:700;padding:6px 12px;border-radius:999px;color:var(--ink);cursor:pointer}
-.seg button.on{background:var(--ink);color:#fff}
+html,body{margin:0;color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif}
+body{
+  background-color:var(--sky);
+  background-image:radial-gradient(rgba(255,255,255,.38) 1.3px,transparent 1.5px);
+  background-size:9px 9px;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-area-inset-bottom) + 24px) env(safe-area-inset-left);
+  overflow-x:hidden;
+}
+.disp{font-family:"Dela Gothic One","Noto Sans TC",sans-serif;font-weight:400}
+.wrap{max-width:720px;margin:0 auto;padding:0 12px;position:relative}
 
-/* next card */
-.next{background:var(--paper);border:2px solid var(--ink);border-radius:16px;padding:12px 14px;margin-bottom:10px;box-shadow:0 3px 0 var(--ink)}
-.next .row{display:flex;gap:10px;align-items:flex-start}
-.next .lab{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;margin-bottom:2px}
-.next .big{font-size:19px;font-weight:900;line-height:1.25}
-.next .meta{font-size:13px;color:var(--muted);margin-top:2px}
-.stagepill{display:inline-block;color:#fff;font-weight:900;font-size:13px;padding:2px 9px;border-radius:999px;margin-right:6px;vertical-align:2px}
-.next .sep{height:1px;background:var(--line);margin:10px 0}
-.warn{color:var(--fire);font-weight:700}
-.nowall{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:10px}
-.nowall div{font-size:11px;line-height:1.3;padding:5px 6px;border-radius:8px;background:#f1ece2;}
+/* bunting + clouds */
+.bunting{height:30px;margin:0 -12px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='30'%3E%3Cpath d='M0 4 Q60 14 120 4' stroke='%232a1d14' stroke-width='1.5' fill='none'/%3E%3Cpath d='M4 5 L22 7 L13 26Z' fill='%23e8262a' stroke='%232a1d14' stroke-width='1.2'/%3E%3Cpath d='M34 8 L52 9 L43 28Z' fill='%23ffd23f' stroke='%232a1d14' stroke-width='1.2'/%3E%3Cpath d='M66 9 L84 8 L75 28Z' fill='%231f4ea3' stroke='%232a1d14' stroke-width='1.2'/%3E%3Cpath d='M96 7 L114 5 L105 26Z' fill='%231e9a48' stroke='%232a1d14' stroke-width='1.2'/%3E%3C/svg%3E") repeat-x}
+.cloud{position:absolute;pointer-events:none;z-index:0}
+.cloud.c1{top:44px;left:-18px;width:110px}
+.cloud.c2{top:96px;right:-22px;width:120px}
+
+header{position:relative;z-index:1;text-align:center;padding:6px 0 12px}
+.logo{display:inline-block;line-height:1;transform:rotate(-2deg)}
+.logo .yr{display:block;font-size:22px;color:var(--hi);-webkit-text-stroke:1.5px var(--ink);text-shadow:2px 2px 0 var(--ink);letter-spacing:1px}
+.logo .fb{display:block;font-size:46px;color:var(--orange);-webkit-text-stroke:2px var(--ink);text-shadow:3px 4px 0 var(--ink);letter-spacing:1px;margin-top:2px}
+.logo .rw{display:block;font-size:15px;color:var(--hi);-webkit-text-stroke:1px var(--ink);text-shadow:2px 2px 0 var(--ink);margin-top:8px;letter-spacing:.5px}
+.sub{font-size:12px;font-weight:900;margin-top:8px;letter-spacing:2px}
+.seg{display:inline-flex;gap:8px;margin-top:10px}
+.seg button{font-family:"Dela Gothic One",sans-serif;border:3px solid var(--ink);background:rgba(255,255,255,.55);font-size:15px;padding:5px 16px;border-radius:999px;color:var(--ink);cursor:pointer;box-shadow:0 3px 0 var(--ink)}
+.seg button.on{background:#fff;transform:translateY(-1px)}
+
+/* comic card */
+.card{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:4px 5px 0 var(--ink)}
+.next{position:relative;z-index:1;padding:12px 14px;margin-bottom:14px}
+.next .lab{display:inline-block;font-size:11px;font-weight:900;color:#fff;background:var(--ink);border-radius:999px;padding:1px 9px;letter-spacing:1px;margin-bottom:6px}
+.next .big{font-size:19px;font-weight:900;line-height:1.3}
+.next .meta{font-size:13px;color:var(--muted);margin-top:3px;font-weight:500}
+.stagepill{display:inline-block;color:#fff;font-weight:900;font-size:13px;padding:2px 10px;border-radius:6px;margin-right:6px;vertical-align:2px;border:2px solid var(--ink)}
+.next .sep{height:0;border-top:2px dashed rgba(42,29,20,.25);margin:10px 0}
+.warn{color:var(--fire)!important;font-weight:900!important}
+.nowall{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:12px}
+.nowall div{font-size:11px;line-height:1.3;padding:5px 6px;border-radius:8px;border:2px solid var(--ink);background:#fff}
 .nowall span.c{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.nowall b{display:block;font-size:10px}
-.sim{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;color:var(--muted)}
-.sim input{flex:1;accent-color:var(--fire)}
-
-.views{display:flex;gap:8px;margin:0 0 10px}
-.views button{flex:1;border:2px solid var(--ink);background:#fff;border-radius:12px;padding:9px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
-.views button.on{background:var(--fire);color:#fff;border-color:var(--fire)}
-.views .count{display:inline-block;min-width:20px;padding:0 5px;margin-left:4px;border-radius:999px;background:rgba(0,0,0,.12);font-size:12px}
-
-/* grid */
+.nowall b{display:block;font-size:10.5px;margin:-5px -6px 4px;padding:2px 6px;color:#fff;border-radius:5px 5px 0 0}
+.sim{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;font-weight:700}
+.sim input{flex:1;accent-color:var(--orange)}
 .simnote{font-size:11px;color:var(--muted);margin-top:4px}
-.gridbox{background:var(--paper);border:2px solid var(--ink);border-radius:16px}
-.heads{display:grid;grid-template-columns:34px repeat(4,1fr);position:sticky;top:0;z-index:10;border-radius:14px 14px 0 0;overflow:hidden;box-shadow:0 2px 0 var(--ink)}
-.heads div{color:#fff;font-weight:900;font-size:13px;text-align:center;padding:8px 2px}
-.heads div:first-child{background:var(--paper)}
-.grid{position:relative;margin-left:0}
-.hour{position:absolute;left:0;right:0;border-top:1px dashed rgba(0,0,0,.12)}
-.hour span{position:absolute;left:3px;top:-8px;font-size:10px;font-weight:700;color:var(--muted);background:var(--paper);padding:0 2px}
-.col{position:absolute;top:0;bottom:0}
-.act{position:absolute;left:2px;right:2px;border-radius:7px;padding:3px 5px;overflow:hidden;cursor:pointer;border:1.5px solid transparent;transition:transform .12s}
-.act:active{transform:scale(.97)}
-.act .t{font-size:9.5px;font-weight:700;opacity:.8;line-height:1.2}
-.act .n{font-size:11.5px;font-weight:700;line-height:1.25;word-break:break-word}
-.act.sel{color:#fff}
+
+.views{position:relative;z-index:1;display:flex;gap:10px;margin:0 0 14px}
+.views button{flex:1;border:3px solid var(--ink);background:#fff;border-radius:14px;padding:9px;font:inherit;font-weight:900;font-size:15px;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
+.views button.on{background:var(--orange);color:#fff}
+.views .count{display:inline-block;min-width:22px;padding:0 6px;margin-left:5px;border-radius:999px;background:var(--hi);color:var(--ink);font-size:12px;border:2px solid var(--ink)}
+
+/* poster grid */
+.gridbox{position:relative;z-index:1}
+.heads{position:sticky;top:0;z-index:10;display:flex;gap:var(--gap);padding:6px 0 0 var(--axis);background:var(--sky);background-image:radial-gradient(rgba(255,255,255,.38) 1.3px,transparent 1.5px);background-size:9px 9px}
+.heads div{flex:1;color:#fff;font-weight:900;font-size:15px;text-align:center;padding:9px 2px;border-radius:14px 14px 0 0;border:3px solid var(--ink);border-bottom:0;letter-spacing:2px;text-shadow:1px 1px 0 rgba(0,0,0,.25)}
+.grid{position:relative}
+.lane{position:absolute;top:0;bottom:0;border-left:3px solid var(--ink);border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);border-radius:0 0 10px 10px}
+.hour{position:absolute;left:var(--axis);right:0;border-top:1.5px solid rgba(255,255,255,.75);z-index:1}
+.hour span{position:absolute;left:calc(-1 * var(--axis) + 1px);top:-11px;font-family:"Dela Gothic One",sans-serif;font-size:10px;color:var(--ink);background:#fff;border:2px solid var(--ink);border-radius:8px;padding:1px 3px;line-height:1.2}
+.act{position:absolute;z-index:2;border-radius:3px;padding:3px 4px;overflow:hidden;cursor:pointer;color:#fff;text-align:center;display:flex;flex-direction:column;justify-content:flex-start;transition:transform .12s}
+.act:active{transform:scale(.96)}
+.act .t{font-size:9px;font-weight:900;line-height:1.2;opacity:.95}
+.act .n{font-size:11px;font-weight:900;line-height:1.2;overflow-wrap:break-word}
+.act.sel{background:var(--hi)!important;color:var(--ink);border:2.5px solid var(--ink);padding:1px 2px;border-radius:6px;box-shadow:2px 3px 0 var(--ink);z-index:3}
 .act.sel .n::before{content:"★ "}
-.act.clash{outline:2.5px solid #111;outline-offset:-1px}
-.act.sp{left:2px;right:2px;padding:0 6px;display:flex;align-items:center;gap:6px;border-radius:5px}
+.act.clash{background-image:repeating-linear-gradient(45deg,transparent 0 6px,rgba(232,38,42,.28) 6px 12px)}
+.act.sp{flex-direction:row;align-items:center;justify-content:center;gap:6px;padding:0 6px;color:var(--ink);border-radius:2px}
 .act.sp .t,.act.sp .n{font-size:9.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nowline{position:absolute;left:30px;right:0;height:0;border-top:2px solid var(--fire);z-index:5;pointer-events:none}
-.nowline::before{content:"";position:absolute;left:-5px;top:-6px;width:10px;height:10px;border-radius:50%;background:var(--fire)}
-.hint{font-size:12px;color:var(--muted);text-align:center;margin:8px 0 2px}
-.nophoto{display:inline-block;font-size:9px;background:#111;color:#fff;border-radius:4px;padding:0 3px;margin-top:2px}
+.nowline{position:absolute;left:calc(var(--axis) - 6px);right:0;height:0;border-top:3px solid var(--fire);z-index:6;pointer-events:none}
+.nowline::before{content:"NOW";position:absolute;left:-36px;top:-10px;font:10px "Dela Gothic One",sans-serif;color:#fff;background:var(--fire);border:2px solid var(--ink);border-radius:6px;padding:0 3px}
+.hint{font-size:12px;font-weight:700;text-align:center;margin:12px 0 2px}
 
 /* list */
 .list{display:flex;flex-direction:column}
-.item{display:flex;gap:10px;align-items:center;background:var(--paper);border:2px solid var(--ink);border-radius:14px;padding:10px 12px}
-.item .bar{width:6px;align-self:stretch;border-radius:4px}
-.item .tm{font-size:13px;font-weight:900;min-width:88px}
-.item .nm{flex:1;font-weight:700;font-size:15px;line-height:1.3}
-.item .nm small{display:block;font-weight:500;font-size:12px;color:var(--muted)}
-.item button{border:0;background:#eee;border-radius:999px;width:30px;height:30px;font-size:16px;cursor:pointer;color:var(--muted)}
-.item.past{opacity:.45}
-.gap{font-size:12.5px;color:var(--muted);padding:6px 4px 6px 22px;border-left:2px dotted rgba(0,0,0,.25);margin-left:14px}
-.gap.bad{color:var(--fire);font-weight:700;border-left-color:var(--fire)}
-.empty{background:var(--paper);border:2px dashed rgba(0,0,0,.3);border-radius:14px;padding:28px 16px;text-align:center;color:var(--muted);font-size:14px;line-height:1.7}
-.tools{display:flex;gap:8px;margin-top:12px}
-.tools button{flex:1;border:2px solid var(--ink);background:#fff;border-radius:12px;padding:9px;font:inherit;font-weight:700;font-size:13px;cursor:pointer}
+.item{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;box-shadow:3px 4px 0 var(--ink)}
+.item .bar{width:8px;align-self:stretch;border-radius:4px;border:2px solid var(--ink)}
+.item .tm{font-family:"Dela Gothic One",sans-serif;font-size:13px;min-width:92px}
+.item .nm{flex:1;font-weight:900;font-size:15px;line-height:1.3}
+.item .nm small{display:block;font-weight:700;font-size:12px;color:var(--muted)}
+.item button{border:2px solid var(--ink);background:#fff;border-radius:999px;width:30px;height:30px;font-size:15px;cursor:pointer;color:var(--ink);font-weight:900}
+.item.past{opacity:.5}
+.gap{font-size:12.5px;font-weight:700;padding:7px 4px 7px 22px;border-left:3px dotted var(--ink);margin-left:16px}
+.gap.bad{color:var(--fire);border-left-color:var(--fire)}
+.empty{padding:28px 16px;text-align:center;font-size:14px;font-weight:700;line-height:1.7}
+.tools{display:flex;gap:10px;margin-top:14px}
+.tools button,.remind button{flex:1;border:3px solid var(--ink);background:#fff;border-radius:14px;padding:9px 6px;font:inherit;font-weight:900;font-size:13px;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
 .tools button.danger{color:var(--fire)}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;font-weight:700;transition:transform .25s;z-index:50;white-space:nowrap}
+.remind{margin-top:16px;padding:12px 14px}
+.remind h3{margin:0 0 4px;font-size:15px;font-weight:900}
+.remind p{margin:0 0 10px;font-size:12px;color:var(--muted);line-height:1.6}
+.remind .row{display:flex;gap:10px}
+.remind button.main{background:var(--hi)}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(90px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;font-weight:700;transition:transform .25s;z-index:50;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
-footer{font-size:11px;color:var(--muted);text-align:center;margin:16px 0 0;line-height:1.6}
-@media (min-width:600px){:root{--px:1.9px}.act .n{font-size:13px}.act .t{font-size:10.5px}}
+.alert{position:fixed;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));z-index:60;background:var(--hi);border:3px solid var(--ink);border-radius:16px;box-shadow:4px 5px 0 var(--ink);padding:12px 14px;font-weight:900;transform:translateY(-160%);transition:transform .3s;max-width:696px;margin:0 auto}
+.alert.show{transform:translateY(0)}
+.alert small{display:block;font-weight:700;font-size:12px;margin-top:2px}
+
+footer{position:relative;font-size:11px;font-weight:700;text-align:center;margin:18px 0 0;line-height:1.7}
+.lanterns{display:flex;justify-content:center;gap:26px;margin:18px 0 4px}
+.lanterns svg{width:34px;height:auto}
+.lanterns svg:nth-child(2){transform:translateY(-10px) rotate(6deg)}
+.lanterns svg:nth-child(1){transform:rotate(-8deg)}
+#shareSite{margin-top:10px;border:3px solid var(--ink);background:#fff;border-radius:999px;padding:7px 18px;font:inherit;font-weight:900;font-size:13px;cursor:pointer;box-shadow:0 3px 0 var(--ink)}
+@media (min-width:600px){:root{--px:2px}.act .n{font-size:13.5px}.act .t{font-size:10.5px}.logo .fb{font-size:60px}}
 </style>
 </head>
 <body>
 <div class="wrap">
+  <div class="bunting"></div>
+  <svg class="cloud c1" viewBox="0 0 110 50"><path d="M15 42c-10 0-13-12-4-16-2-11 12-17 19-9 3-12 22-14 26-2 8-7 22-1 19 10 10 0 12 15 1 17z" fill="#fff" stroke="#2a1d14" stroke-width="2.5"/></svg>
+  <svg class="cloud c2" viewBox="0 0 110 50"><path d="M15 42c-10 0-13-12-4-16-2-11 12-17 19-9 3-12 22-14 26-2 8-7 22-1 19 10 10 0 12 15 1 17z" fill="#fff" stroke="#2a1d14" stroke-width="2.5"/></svg>
   <header>
-    <h1>FIREBALL 2026<small>ROCKIN' WONDERLAND・我的 Lineup</small></h1>
+    <div class="logo disp"><span class="yr">2026</span><span class="fb">FIREBALL</span><span class="rw">ROCKIN' WONDERLAND</span></div>
+    <div class="sub">我的 LINEUP</div>
     <div class="seg" id="daySeg">
-      <button data-day="d1">11/14 六</button>
-      <button data-day="d2">11/15 日</button>
+      <button data-day="d1">11/14 Sat.</button>
+      <button data-day="d2">11/15 Sun.</button>
     </div>
   </header>
 
-  <section class="next" id="next"></section>
+  <section class="next card" id="next"></section>
 
   <div class="views" id="viewSeg">
     <button data-view="grid">全部節目表</button>
@@ -116,17 +150,26 @@ footer{font-size:11px;color:var(--muted);text-align:center;margin:16px 0 0;line-
 
   <div id="main"></div>
 
-  <footer>點節目加入／取消你的 lineup，選擇只存在你自己的手機裡，每個人各排各的。<br>時間依官方 11/14、11/15 節目表，以現場公告為準。<br><button id="shareSite" style="margin-top:10px;border:2px solid var(--ink);background:#fff;border-radius:999px;padding:7px 16px;font:inherit;font-weight:700;font-size:13px;cursor:pointer">分享這個網頁給朋友</button></footer>
+  <footer>
+    <div class="lanterns" aria-hidden="true">
+      <svg viewBox="0 0 34 50"><path d="M5 4h24l-3 36H8z" fill="#fff" stroke="#2a1d14" stroke-width="2.5"/><path d="M6 14h22M7 28h20" stroke="#e8262a" stroke-width="3"/><path d="M12 40h10v5H12z" fill="#ffd23f" stroke="#2a1d14" stroke-width="2"/></svg>
+      <svg viewBox="0 0 34 50"><path d="M5 4h24l-3 36H8z" fill="#fff" stroke="#2a1d14" stroke-width="2.5"/><path d="M6 14h22M7 28h20" stroke="#f26322" stroke-width="3"/><path d="M12 40h10v5H12z" fill="#ffd23f" stroke="#2a1d14" stroke-width="2"/></svg>
+      <svg viewBox="0 0 34 50"><path d="M5 4h24l-3 36H8z" fill="#fff" stroke="#2a1d14" stroke-width="2.5"/><path d="M6 14h22M7 28h20" stroke="#e8262a" stroke-width="3"/><path d="M12 40h10v5H12z" fill="#ffd23f" stroke="#2a1d14" stroke-width="2"/></svg>
+    </div>
+    點節目加入／取消你的 lineup，選擇只存在你自己的手機裡，每個人各排各的。<br>時間依官方 11/14、11/15 節目表，以現場公告為準。<br>
+    <button id="shareSite">分享這個網頁給朋友</button>
+  </footer>
 </div>
 <div class="toast" id="toast"></div>
+<div class="alert" id="alert"></div>
 
 <script>
 const STAGES = {
-  fire:{name:'火舞台',color:'var(--fire)',hex:'#e3262b',tint:'#fbd5cf'},
-  ball:{name:'球舞台',color:'var(--ball)',hex:'#2350a6',tint:'#d3def3'},
-  fest:{name:'祭舞台',color:'var(--fest)',hex:'#1f9a46',tint:'#cfeccf'},
-  vill:{name:'火球村',color:'var(--vill)',hex:'#f26a2b',tint:'#fdd9c4'},
-  sp:{name:'特別演出',color:'var(--sp)',hex:'#f2a21b',tint:'#fde5b5'}
+  fire:{name:'火舞台',hex:'#e8262a',lane:'#f8b29c'},
+  ball:{name:'球舞台',hex:'#1f4ea3',lane:'#b5b5b5'},
+  fest:{name:'祭舞台',hex:'#1e9a48',lane:'#a5da86'},
+  vill:{name:'火球村',hex:'#f15a24',lane:'#f6a6c6'},
+  sp:{name:'特別演出',hex:'#f7a51c',lane:'#f7a51c'}
 };
 const COLS = ['fire','ball','fest','vill'];
 const SPECIAL = [
@@ -196,10 +239,13 @@ const esc = s => s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':
 for (const k in DAYS) DAYS[k].acts = DAYS[k].acts.map(([st,s,e,n,f]) => ({id:k+'-'+st+'-'+s, day:k, st, s:m(s), e:m(e), n, np:f==='np'}));
 
 const START = 11*60, END = 21*60+50;
-const KEY = 'fireball2026-lineup';
-let picks = new Set();
-try { picks = new Set(JSON.parse(localStorage.getItem(KEY) || '[]')); } catch(e) {}
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify([...picks])); } catch(e) {} };
+const KEY = 'fireball2026-lineup', NKEY = 'fireball2026-notified', AKEY = 'fireball2026-alerts';
+const load = (k,d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch(e) { return d; } };
+const store = (k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} };
+let picks = new Set(load(KEY, []));
+let notified = new Set(load(NKEY, []));
+let alertsOn = load(AKEY, true);
+const save = () => store(KEY, [...picks]);
 
 function tpNow(){
   const p = Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date()).map(x=>[x.type,x.value]));
@@ -250,13 +296,12 @@ function renderNext(){
       h += `<div class="lab">下一站</div><div class="meta">這是你今天最後一場</div>`;
     }
   }
-  // what's on now everywhere
   const all = DAYS[day].acts;
   h += `<div class="nowall">` + COLS.map(st=>{
     const a = all.find(x=>x.st===st && x.s<=now && now<x.e);
     const b = all.find(x=>x.st===st && x.s>now);
-    const txt = a ? `<span class="c">${esc(a.n)}</span>` : (b ? `<span class="c" style="opacity:.7">${hm(b.s)} ${esc(b.n)}</span>` : '<span style="opacity:.5">已結束</span>');
-    return `<div><b style="color:${STAGES[st].hex}">${STAGES[st].name}${a?' ●':''}</b>${txt}</div>`;
+    const txt = a ? `<span class="c">${esc(a.n)}</span>` : (b ? `<span class="c" style="opacity:.65">${hm(b.s)} ${esc(b.n)}</span>` : '<span style="opacity:.5">已結束</span>');
+    return `<div><b style="background:${STAGES[st].hex}">${STAGES[st].name}${a?' ●':''}</b>${txt}</div>`;
   }).join('') + `</div>`;
   if (!live){
     h += `<div class="sim"><span style="white-space:nowrap">預覽 ${hm(sim)}</span><input type="range" min="${START}" max="${END}" step="5" value="${sim}" id="simR"></div><div class="simnote">還沒到活動日，可以拖拉看看；11/14、11/15 當天會自動用現在時間。</div>`;
@@ -277,27 +322,29 @@ function placeNow(){
 
 function renderGrid(){
   const acts = DAYS[day].acts, bad = clashes(mine());
-  let h = `<div class="gridbox"><div class="heads">${'<div></div>'+COLS.map(c=>`<div style="background:${STAGES[c].hex}">${STAGES[c].name}</div>`).join('')}</div>`;
-  h += `<div class="grid" style="height:calc(${END-START+12} * var(--px));margin-top:8px">`;
-  for (let t=START; t<=END; t+=60) h += `<div class="hour" style="top:calc(${t-START} * var(--px))"><span>${hm(t)}</span></div>`;
-  const colW = `((100% - 34px) / 4)`;
+  const laneW = `((100% - var(--axis) - 3 * var(--gap)) / 4)`;
+  const left = i => `calc(var(--axis) + ${i} * (${laneW} + var(--gap)))`;
+  let h = `<div class="gridbox"><div class="heads">${COLS.map(c=>`<div style="background:${STAGES[c].hex}">${STAGES[c].name}</div>`).join('')}</div>`;
+  h += `<div class="grid" style="height:calc(${END-START+14} * var(--px))">`;
+  COLS.forEach((c,i)=>{ h += `<div class="lane" style="left:${left(i)};width:calc(${laneW});background:${STAGES[c].lane}"></div>`; });
+  for (let t=START; t<=END; t+=60) h += `<div class="hour" style="top:calc(${t-START+7} * var(--px))"><span>${hm(t)}</span></div>`;
   acts.forEach(a=>{
     const S = STAGES[a.st], sel = picks.has(a.id);
     const ci = a.st==='sp' ? 0 : COLS.indexOf(a.st);
-    const width = a.st==='sp' ? `calc(2 * ${colW})` : `calc(${colW})`;
-    const style = `top:calc(${a.s-START} * var(--px));height:calc(${a.e-a.s} * var(--px) - 2px);left:calc(34px + ${ci} * ${colW} + 2px);width:calc(${width} - 4px);right:auto;`
-      + (sel ? `background:${S.hex};border-color:${S.hex};` : `background:${S.tint};border-color:${S.hex}55;`)
-      + (a.st==='sp' && !sel ? 'color:#7a4a00;' : '');
+    const width = a.st==='sp' ? `calc(2 * ${laneW} + var(--gap) - 4px)` : `calc(${laneW} - 10px)`;
+    const style = `top:calc(${a.s-START+7} * var(--px));height:calc(${a.e-a.s} * var(--px));left:calc(${left(ci)} + ${a.st==='sp'?2:5}px);width:${width};background:${S.hex};`;
     h += `<div class="act ${a.st==='sp'?'sp':''} ${sel?'sel':''} ${bad.has(a.id)?'clash':''}" data-id="${a.id}" style="${style}">
       <div class="t">${hm(a.s)}${a.st==='sp'?'':'–'+hm(a.e)}</div><div class="n">${esc(a.n)}</div></div>`;
   });
-  h += `</div></div><div class="hint">點一下加入 ★，再點一次取消；黑框代表時間撞到</div>`;
+  h += `</div></div><div class="hint">點一下加入 ★，再點一次取消；斜線代表時間撞到</div>`;
   return h;
 }
 
 function renderList(){
   const my = mine(), now = nowMin();
-  if (!my.length) return `<div class="empty">${DAYS[day].label} 還沒有選任何節目。<br>切到「全部節目表」點你想看的團就會出現在這裡。</div>`;
+  const remind = `<div class="remind card"><h3>⏰ 開演提醒</h3><p>加到手機行事曆最穩，App 關掉也會在開演前 10 分鐘跳通知。「App 內提醒」要網頁開著（或剛切到背景）才會響。</p>
+    <div class="row"><button class="main" id="icsBtn">加到行事曆（兩天全部）</button><button id="notiBtn">${alertsOn && notiPerm()==='granted' ? 'App 內提醒：已開啟' : '開啟 App 內提醒'}</button></div></div>`;
+  if (!my.length) return `<div class="empty card">${DAYS[day].label} 還沒有選任何節目。<br>切到「全部節目表」點你想看的團就會出現在這裡。</div>` + remind;
   let h = '<div class="list">';
   my.forEach((a,i)=>{
     if (i>0){
@@ -306,12 +353,12 @@ function renderList(){
       else if (p.st===a.st) h += `<div class="gap">空檔 ${dur(g)}・同一個舞台，原地等</div>`;
       else h += `<div class="gap">空檔 ${g?dur(g):'0 分'}・移動到 <b style="color:${STAGES[a.st].hex}">${STAGES[a.st].name}</b>${g<10?'（很趕）':''}</div>`;
     }
-    h += `<div class="item ${a.e<=now?'past':''}"><div class="bar" style="background:${STAGES[a.st].hex}"></div>
+    h += `<div class="item card ${a.e<=now?'past':''}"><div class="bar" style="background:${STAGES[a.st].hex}"></div>
       <div class="tm">${hm(a.s)}–${hm(a.e)}</div>
       <div class="nm">${esc(a.n)}<small>${STAGES[a.st].name}${a.np?'・禁止拍照錄影':''}</small></div>
       <button data-rm="${a.id}" aria-label="移除">×</button></div>`;
   });
-  h += `</div><div class="tools"><button id="copyBtn">複製我的 lineup</button><button class="danger" id="clrBtn">清除這天</button></div>`;
+  h += `</div><div class="tools"><button id="copyBtn">複製我的 lineup</button><button class="danger" id="clrBtn">清除這天</button></div>` + remind;
   return h;
 }
 
@@ -324,16 +371,82 @@ function renderMain(){
 }
 function render(){ renderNext(); renderMain(); }
 
-function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.classList.add('show'); clearTimeout(toast.h); toast.h=setTimeout(()=>el.classList.remove('show'),1600); }
+function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.classList.add('show'); clearTimeout(toast.h); toast.h=setTimeout(()=>el.classList.remove('show'),1800); }
 
-document.getElementById('daySeg').onclick = e => { const d=e.target.dataset.day; if(d){ day=d; render(); } };
+/* ---------- reminders ---------- */
+const notiPerm = () => ('Notification' in window) ? Notification.permission : 'unsupported';
+function showAlert(title, body){
+  const el = document.getElementById('alert');
+  el.innerHTML = `${esc(title)}<small>${esc(body)}</small>`;
+  el.classList.add('show');
+  clearTimeout(showAlert.h); showAlert.h = setTimeout(()=>el.classList.remove('show'), 12000);
+  try { navigator.vibrate && navigator.vibrate([300,150,300]); } catch(e) {}
+  if (notiPerm()==='granted'){
+    const opt = {body, icon:'icon-192.png', badge:'icon-192.png', tag:title};
+    if ('serviceWorker' in navigator) navigator.serviceWorker.ready.then(r=>r.showNotification(title,opt)).catch(()=>{ try{ new Notification(title,opt); }catch(e){} });
+    else { try{ new Notification(title,opt); }catch(e){} }
+  }
+}
+function checkAlerts(){
+  if (!alertsOn) return;
+  const t = tpNow();
+  for (const k of ['d1','d2']){
+    if (DAYS[k].date !== t.date) continue;
+    DAYS[k].acts.filter(a=>picks.has(a.id)).forEach(a=>{
+      [[a.s-10,'10 分鐘後開演'],[a.s,'現在開演']].forEach(([when,msg],i)=>{
+        const key = a.id+':'+i;
+        if (t.min>=when && t.min<when+3 && !notified.has(key)){
+          notified.add(key); store(NKEY,[...notified]);
+          showAlert(`${msg}：${a.n}`, `${STAGES[a.st].name}・${hm(a.s)}–${hm(a.e)}`);
+        }
+      });
+    });
+  }
+}
+async function toggleAlerts(){
+  if (alertsOn && notiPerm()==='granted'){ alertsOn=false; store(AKEY,false); toast('已關閉 App 內提醒'); renderMain(); return; }
+  alertsOn = true; store(AKEY,true);
+  if (notiPerm()==='unsupported'){ toast('這裡不支援通知，先加到主畫面或用行事曆'); renderMain(); return; }
+  try { const p = await Notification.requestPermission(); toast(p==='granted' ? '提醒已開啟' : '沒有通知權限，改用行事曆比較穩'); } catch(e) { toast('無法開啟通知，改用行事曆比較穩'); }
+  renderMain();
+}
+function icsText(s){ return s.replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n'); }
+function buildICS(){
+  const list = ['d1','d2'].flatMap(k=>DAYS[k].acts.filter(a=>picks.has(a.id)));
+  if (!list.length) return null;
+  const utc = (date,min) => { const d = new Date(`${date}T00:00:00+08:00`); d.setMinutes(d.getMinutes()+min); return d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''); };
+  const stamp = new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+  const L = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//fireball-lineup//TW','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:Fireball 2026 我的 Lineup'];
+  list.forEach(a=>{
+    const date = DAYS[a.day].date, sum = icsText(`${STAGES[a.st].name}｜${a.n}`);
+    L.push('BEGIN:VEVENT',`UID:${a.id.replace(/:/g,'')}@fireball-lineup`,`DTSTAMP:${stamp}`,`DTSTART:${utc(date,a.s)}`,`DTEND:${utc(date,a.e)}`,`SUMMARY:${sum}`,`LOCATION:${icsText('Fireball 2026 '+STAGES[a.st].name)}`,
+      'BEGIN:VALARM','ACTION:DISPLAY','TRIGGER:-PT10M',`DESCRIPTION:${sum}`,'END:VALARM','END:VEVENT');
+  });
+  L.push('END:VCALENDAR');
+  return L.join('\r\n');
+}
+function exportICS(){
+  const ics = buildICS();
+  if (!ics){ toast('先選幾個節目再加到行事曆'); return; }
+  const iOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+  if (iOS){ location.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics); return; }
+  const url = URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));
+  const a = document.createElement('a'); a.href=url; a.download='fireball2026-lineup.ics'; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 5000);
+  toast('已下載，打開檔案就會加進行事曆');
+}
+
+document.getElementById('daySeg').onclick = e => { const b=e.target.closest('button'); if(b){ day=b.dataset.day; render(); } };
 document.getElementById('viewSeg').onclick = e => { const b=e.target.closest('button'); if(b){ view=b.dataset.view; render(); window.scrollTo({top:0}); } };
+document.getElementById('alert').onclick = e => e.currentTarget.classList.remove('show');
 let clrArmed = false;
 document.getElementById('main').onclick = async e => {
   const act = e.target.closest('.act');
   if (act){ const id=act.dataset.id; picks.has(id)?picks.delete(id):picks.add(id); save(); render(); return; }
   const rm = e.target.closest('[data-rm]');
   if (rm){ picks.delete(rm.dataset.rm); save(); render(); return; }
+  if (e.target.id==='icsBtn'){ exportICS(); return; }
+  if (e.target.id==='notiBtn'){ toggleAlerts(); return; }
   if (e.target.id==='copyBtn'){
     let txt = 'FIREBALL 2026 我的 lineup\n';
     ['d1','d2'].forEach(k=>{
@@ -355,7 +468,9 @@ document.getElementById('shareSite').onclick = async () => {
 };
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
 render();
-setInterval(()=>{ if (isLive()) { renderNext(); if (view==='grid') placeNow(); } }, 30000);
+checkAlerts();
+setInterval(()=>{ checkAlerts(); if (isLive()) { renderNext(); if (view==='grid') placeNow(); } }, 20000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden){ checkAlerts(); render(); } });
 </script>
 </body>
 </html>

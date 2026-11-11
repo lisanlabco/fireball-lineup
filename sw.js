@@ -1,5 +1,5 @@
 // 離線快取：現場收訊差也打得開
-const CACHE = 'fireball2026-v1';
+const CACHE = 'fireball2026-v2';
 const CORE = ['./', 'index.html', 'manifest.webmanifest', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
@@ -20,4 +20,8 @@ self.addEventListener('fetch', e => {
       const copy = res.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); return res;
     })));
   }
+});
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(clients.matchAll({type:'window', includeUncontrolled:true}).then(cs => cs.length ? cs[0].focus() : clients.openWindow('./')));
 });
