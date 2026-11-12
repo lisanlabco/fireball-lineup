@@ -279,6 +279,10 @@ let uid = load('fireball2026-uid', '');
 if (!/^[a-z0-9]{8,32}$/.test(uid)) { uid = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => (b % 36).toString(36)).join(''); store('fireball2026-uid', uid); }
 let calSub = load('fireball2026-calsub', false);
 let lastSync = load('fireball2026-lastsync', '');
+const fromShare = /[?&]from=share/.test(location.search);
+if (fromShare) { try { history.replaceState(null, '', location.pathname + location.hash); } catch(e) {} }
+const shareUrl = location.origin + location.pathname + '?from=share';
+const countShare = () => { try { fetch(`${GAS}?ev=share`, {mode:'no-cors', keepalive:true}); } catch(e) {} };
 const save = () => { store(KEY, [...picks]); if (calSub) queueSync(); queueHit(); };
 
 function tpNow(){
@@ -482,7 +486,7 @@ function queueSync(){
   syncTimer = setTimeout(async () => { try { await syncCloud(); if (view==='mine') renderMain(); } catch(e) {} }, 1200);
 }
 function hit(){
-  try { fetch(`${GAS}?hit=1&u=${uid}&e=${allIds().join(',')}`, {mode:'no-cors', keepalive:true}); store('fireball2026-hit', tpNow().date); } catch(e) {}
+  try { fetch(`${GAS}?hit=1&u=${uid}&e=${allIds().join(',')}${fromShare ? '&ref=share' : ''}`, {mode:'no-cors', keepalive:true}); store('fireball2026-hit', tpNow().date); } catch(e) {}
 }
 let hitTimer;
 function queueHit(){ clearTimeout(hitTimer); hitTimer = setTimeout(hit, 5000); }
@@ -529,7 +533,8 @@ document.getElementById('main').onclick = async e => {
       const list = DAYS[k].acts.filter(a=>picks.has(a.id)).sort((a,b)=>a.s-b.s);
       if (list.length){ txt += `\n${DAYS[k].label}\n` + list.map(a=>`${hm(a.s)}–${hm(a.e)}  ${STAGES[a.st].name}  ${a.n}`).join('\n') + '\n'; }
     });
-    try { await navigator.clipboard.writeText(txt); toast('已複製，可以貼給朋友'); } catch(err){ toast('這裡無法複製，請截圖分享'); }
+    txt += `\n排自己的 lineup：${shareUrl}\n`;
+    try { await navigator.clipboard.writeText(txt); countShare(); toast('已複製，可以貼給朋友'); } catch(err){ toast('這裡無法複製，請截圖分享'); }
     return;
   }
   if (e.target.id==='clrBtn'){
@@ -538,9 +543,9 @@ document.getElementById('main').onclick = async e => {
   }
 };
 document.getElementById('shareSite').onclick = async () => {
-  const url = location.href.split('#')[0];
-  if (navigator.share) { try { await navigator.share({title:'Fireball 2026 排自己的 lineup', url}); return; } catch(e) { if (e.name==='AbortError') return; } }
-  try { await navigator.clipboard.writeText(url); toast('網址已複製'); } catch(e) { toast(url); }
+  const url = shareUrl;
+  if (navigator.share) { try { await navigator.share({title:'Fireball 2026 排自己的 lineup', url}); countShare(); return; } catch(e) { if (e.name==='AbortError') return; } }
+  try { await navigator.clipboard.writeText(url); countShare(); toast('網址已複製'); } catch(e) { toast(url); }
 };
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
 render();

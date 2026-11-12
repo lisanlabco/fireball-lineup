@@ -29,11 +29,13 @@ p{font-size:12px;color:#5a5048;line-height:1.6}
     <div class="c"><b>使用過的手機</b><div class="n" id="dev">…</div></div>
     <div class="c"><b>今天打開過</b><div class="n" id="today">…</div></div>
     <div class="c"><b>訂閱行事曆</b><div class="n" id="subs">…</div></div>
+    <div class="c"><b>按了分享</b><div class="n" id="shares">…</div></div>
+    <div class="c"><b>朋友分享帶進來</b><div class="n" id="via">…</div></div>
   </div>
   <div class="c"><b>熱門場次</b><table id="top"></table></div>
   <button id="re">重新整理</button>
   <p id="at"></p>
-  <p>以手機為單位計算。同一個人換手機或清除瀏覽資料，會算成新的一支。熱門場次依每支手機目前選的場次統計。</p>
+  <p>以手機為單位計算。同一個人換手機或清除瀏覽資料，會算成新的一支。熱門場次依每支手機目前選的場次統計。「按了分享」包含分享按鈕和複製 lineup；「朋友分享帶進來」是點分享連結第一次打開網站的手機數，從 11/12 中午開始記錄。</p>
 </div>
 <script>
 const GAS = 'https://script.google.com/macros/s/AKfycbze3cX_TOB64N49ZPMYjqyikP9Z5uX9ass7c4SYIlSrjVXNNBJjbKbMa6Vq4C14YZe9/exec';
@@ -45,6 +47,8 @@ async function load(){
     document.getElementById('dev').textContent = d.devices;
     document.getElementById('today').textContent = d.today;
     document.getElementById('subs').textContent = d.subs;
+    document.getElementById('shares').textContent = d.shares ?? 0;
+    document.getElementById('via').textContent = d.viaShare ?? 0;
     document.getElementById('top').innerHTML = d.top.map((x, i) => `<tr><td>${i + 1}</td><td>${esc(x.t)}<br><small>${x.d.slice(5).replace('-', '/')} ${x.s}</small></td><td>${x.n}</td></tr>`).join('') || '<tr><td></td><td>還沒有人選場次</td><td></td></tr>';
     document.getElementById('at').textContent = '更新時間 ' + new Date(d.at).toLocaleString('zh-TW', {timeZone: 'Asia/Taipei', hour12: false});
   } catch (e) {
