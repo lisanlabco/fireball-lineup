@@ -127,6 +127,7 @@ header{position:relative;z-index:1;text-align:center;padding:6px 0 12px}
 .remind p{margin:0 0 10px;font-size:12px;color:var(--muted);line-height:1.6}
 .remind .row{display:flex;gap:10px}
 .remind button.main{background:var(--hi)}
+.remind .testbtn{display:block;width:100%;margin-top:10px;border:2px dashed var(--ink);background:transparent;border-radius:12px;padding:8px;font:inherit;font-weight:900;font-size:13px;cursor:pointer;color:var(--ink)}
 .remind a{color:var(--ball);font-weight:900}
 .icsbox{font-size:12px;font-weight:700;margin-top:10px;line-height:1.6}
 .icsbox:empty{display:none}
@@ -385,7 +386,7 @@ function renderGrid(){
 function renderList(){
   const my = mine(), now = nowMin();
   const remind = `<div class="remind card"><h3>${icon('bell')}開演提醒</h3>${calSub ? `<p>已訂閱行事曆。之後在這裡加入或取消場次會自動同步，行事曆通常幾分鐘內更新；急的話到行事曆 App 的「行事曆」列表往下拉就會刷新。${lastSync ? `<br>最後同步 ${lastSync}` : ''}<br><a href="#" id="resub">剛剛沒訂閱成功？點這裡重新訂閱</a></p>` : `<p>按黃色按鈕訂閱行事曆，跳出畫面後按「訂閱」。之後重選場次會自動更新，取消的場次也會從行事曆消失。<br>iPhone 要響提醒：到「設定」的行事曆帳號，找到已訂閱的「Fireball 2026」，把「移除提醒」關掉。</p>`}
-    <div class="row"><button class="main" id="icsBtn">${calSub ? '立即同步' : '一鍵訂閱行事曆'}</button><button id="notiBtn">${alertsOn && notiPerm()==='granted' ? 'App 內提醒：已開啟' : '開啟 App 內提醒'}</button></div></div>`;
+    <div class="row"><button class="main" id="icsBtn">${calSub ? '立即同步' : '一鍵訂閱行事曆'}</button><button id="notiBtn">${alertsOn && notiPerm()==='granted' ? 'App 內提醒：已開啟' : '開啟 App 內提醒'}</button></div><button class="testbtn" id="testNoti">傳一則測試通知（5 秒後）</button></div>`;
   if (!my.length) return `<div class="empty card">${DAYS[day].label} 還沒有選任何節目。<br>切到「全部節目表」點你想看的團就會出現在這裡。</div>` + remind;
   let h = '<div class="list">';
   my.forEach((a,i)=>{
@@ -510,6 +511,13 @@ document.getElementById('main').onclick = async e => {
   if (e.target.id==='icsBtn'){ exportICS(); return; }
   if (e.target.id==='resub'){ e.preventDefault(); calSub=false; store('fireball2026-calsub', false); exportICS(); return; }
   if (e.target.id==='notiBtn'){ toggleAlerts(); return; }
+  if (e.target.id==='testNoti'){
+    if (notiPerm()==='default'){ try { await Notification.requestPermission(); } catch(err) {} }
+    const p = notiPerm();
+    toast(p==='granted' ? '5 秒後會跳通知，可以先切到桌面或鎖螢幕試試' : p==='unsupported' ? '這裡不支援系統通知，5 秒後只會在畫面上方提醒' : '沒有通知權限，5 秒後只會在畫面上方提醒');
+    setTimeout(() => showAlert('測試提醒：下一場快開始了', '活動當天開演前 10 分鐘，會像這樣提醒你'), 5000);
+    return;
+  }
   if (e.target.id==='copyBtn'){
     let txt = 'FIREBALL 2026 我的 lineup\n';
     ['d1','d2'].forEach(k=>{
