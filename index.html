@@ -177,7 +177,7 @@ footer{position:relative;font-size:11px;font-weight:700;text-align:center;margin
       <svg viewBox="0 0 34 50"><path d="M5 4h24l-3 36H8z" fill="#fff" stroke="#2a1d14" stroke-width="2.5"/><path d="M6 14h22M7 28h20" stroke="#f26322" stroke-width="3"/><path d="M12 40h10v5H12z" fill="#ffd23f" stroke="#2a1d14" stroke-width="2"/></svg>
       <svg viewBox="0 0 34 50"><path d="M5 4h24l-3 36H8z" fill="#fff" stroke="#2a1d14" stroke-width="2.5"/><path d="M6 14h22M7 28h20" stroke="#e8262a" stroke-width="3"/><path d="M12 40h10v5H12z" fill="#ffd23f" stroke="#2a1d14" stroke-width="2"/></svg>
     </div>
-    非官方粉絲自製，與主辦單位無關。<br>時間依官方 11/14、11/15 節目表整理，請以現場公告為準。你的選擇只存在自己的手機裡。<br>
+    非官方粉絲自製，與主辦單位無關。<br>時間依官方 11/14、11/15 節目表整理，請以現場公告為準。你的選擇存在自己的手機裡，網站只匿名統計使用人數與熱門場次。<br>
     <button id="shareSite">分享這個網頁給朋友</button>
   </footer>
 </div>
@@ -279,7 +279,7 @@ let uid = load('fireball2026-uid', '');
 if (!/^[a-z0-9]{8,32}$/.test(uid)) { uid = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => (b % 36).toString(36)).join(''); store('fireball2026-uid', uid); }
 let calSub = load('fireball2026-calsub', false);
 let lastSync = load('fireball2026-lastsync', '');
-const save = () => { store(KEY, [...picks]); if (calSub) queueSync(); };
+const save = () => { store(KEY, [...picks]); if (calSub) queueSync(); queueHit(); };
 
 function tpNow(){
   const p = Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date()).map(x=>[x.type,x.value]));
@@ -481,6 +481,11 @@ function queueSync(){
   clearTimeout(syncTimer);
   syncTimer = setTimeout(async () => { try { await syncCloud(); if (view==='mine') renderMain(); } catch(e) {} }, 1200);
 }
+function hit(){
+  try { fetch(`${GAS}?hit=1&u=${uid}&e=${allIds().join(',')}`, {mode:'no-cors', keepalive:true}); store('fireball2026-hit', tpNow().date); } catch(e) {}
+}
+let hitTimer;
+function queueHit(){ clearTimeout(hitTimer); hitTimer = setTimeout(hit, 5000); }
 async function exportICS(){
   const btn = document.getElementById('icsBtn');
   if (btn){ btn.disabled = true; btn.textContent = '同步中…'; }
@@ -539,6 +544,7 @@ document.getElementById('shareSite').onclick = async () => {
 };
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
 render();
+if (load('fireball2026-hit','') !== tpNow().date) hit();
 checkAlerts();
 setInterval(()=>{ checkAlerts(); if (isLive()) { renderNext(); if (view==='grid') placeNow(); } }, 20000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden){ checkAlerts(); render(); } });
